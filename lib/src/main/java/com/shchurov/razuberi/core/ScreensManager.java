@@ -38,7 +38,7 @@ public class ScreensManager {
         container.addView(screenView);
     }
 
-    public Screen restoreAndAdd(ScreenState screenState) {
+    public Screen restoreStateAndAdd(ScreenState screenState) {
         Screen screen = null;
         try {
             screen = screenState.getScreenClass().newInstance();
@@ -59,6 +59,14 @@ public class ScreensManager {
         container.removeView(screen.getView());
     }
 
+    public ScreenState getStateAndRemove(Screen screen) {
+        ScreenState screenState = screen.getScreenState();
+        remove(screen);
+        return screenState;
+    }
+
+
+
     public ArrayList<Screen> getAddedScreens() {
         return new ArrayList<>(addedScreens.values());
     }
@@ -70,7 +78,7 @@ public class ScreensManager {
     private void restoreState(Bundle savedState) {
         ArrayList<ScreenState> addedScreenStates = savedState.getParcelableArrayList(SAVE_KEY);
         for (ScreenState screenState : addedScreenStates) {
-            restoreAndAdd(screenState);
+            restoreStateAndAdd(screenState);
         }
     }
 

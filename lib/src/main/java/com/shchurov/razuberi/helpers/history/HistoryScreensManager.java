@@ -38,8 +38,8 @@ public class HistoryScreensManager extends ScreensManager {
         history.add(entry);
     }
 
-    public HistoryEntry getLastHistoryEntry() {
-        return history.isEmpty() ? null : history.get(history.size() - 1);
+    public HistoryEntry popLastHistoryEntry() {
+        return history.isEmpty() ? null : history.remove(history.size() - 1);
     }
 
 }

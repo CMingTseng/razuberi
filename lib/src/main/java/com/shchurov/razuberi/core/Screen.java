@@ -14,7 +14,7 @@ public abstract class Screen {
     private String tag;
     private int containerId;
 
-    final View performAdd(Activity activity, String tag, int containerId) {
+    View performAdd(Activity activity, String tag, int containerId) {
         this.activity = activity;
         this.tag = tag;
         this.containerId = containerId;
@@ -22,30 +22,30 @@ public abstract class Screen {
         return view;
     }
 
-    final View performAdd(Activity activity, ScreenState screenState) {
+    View performAdd(Activity activity, ScreenState screenState) {
         this.activity = activity;
         this.tag = screenState.getTag();
-        view = onAdd(screenState.getClientState());
+        view = onAdd(screenState.getSavedInstanceState());
         view.restoreHierarchyState(screenState.getViewState());
         return view;
     }
 
-    final void performRemove() {
+    void performRemove() {
         onRemove();
         this.activity = null;
         this.containerId = 0;
         this.view = null;
     }
 
-    public final int getContainerId() {
-        return containerId;
-    }
-
-    public ScreenState getScreenState() {
+    ScreenState getScreenState() {
         SparseArray<Parcelable> viewState = new SparseArray<>();
         view.saveHierarchyState(viewState);
         Bundle clientState = onSaveInstanceState();
         return new ScreenState(getClass(), containerId, tag, viewState, clientState);
+    }
+
+    public final int getContainerId() {
+        return containerId;
     }
 
     public Activity getActivity() {

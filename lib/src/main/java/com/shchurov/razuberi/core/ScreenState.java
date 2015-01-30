@@ -40,7 +40,7 @@ public class ScreenState implements Parcelable {
         return viewState;
     }
 
-    Bundle getClientState() {
+    public Bundle getSavedInstanceState() {
         return clientState;
     }
 
