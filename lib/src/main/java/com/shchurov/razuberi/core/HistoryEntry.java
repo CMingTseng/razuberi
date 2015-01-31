@@ -1,9 +1,7 @@
-package com.shchurov.razuberi.helpers.history;
+package com.shchurov.razuberi.core;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-
-import com.shchurov.razuberi.core.ScreenState;
 
 import java.util.LinkedList;
 

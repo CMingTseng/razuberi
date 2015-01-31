@@ -5,51 +5,69 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.util.SparseArray;
 import android.view.View;
-import android.view.ViewGroup;
 
 public abstract class Screen {
 
-    private Activity activity;
+    public static final int ANIMATION_CODE_NONE = -1;
+
+    private ScreensManager screensManager;
     private View view;
     private String tag;
     private int containerId;
+    private Bundle persistentData = new Bundle();
 
-    View performAdd(Activity activity, String tag, int containerId) {
-        this.activity = activity;
+    View performAdd(ScreensManager screensManager, String tag, int containerId, Bundle persistentData,
+                    SparseArray<Parcelable> viewState, int animationCode) {
+        this.screensManager = screensManager;
         this.tag = tag;
         this.containerId = containerId;
-        view = onAdd(null);
+        if (persistentData != null) {
+            this.persistentData = persistentData;
+        }
+        view = onAdd(animationCode);
+        if (viewState != null) {
+            view.restoreHierarchyState(viewState);
+        }
         return view;
     }
 
-    View performAdd(Activity activity, ScreenState screenState) {
-        this.activity = activity;
-        this.tag = screenState.getTag();
-        view = onAdd(screenState.getSavedInstanceState());
-        view.restoreHierarchyState(screenState.getViewState());
-        return view;
-    }
-
-    void performRemove() {
-        onRemove();
-        this.activity = null;
-        this.containerId = 0;
-        this.view = null;
+    void performRemove(int animationCode) {
+        onRemove(animationCode);
     }
 
     ScreenState getScreenState() {
         SparseArray<Parcelable> viewState = new SparseArray<>();
         view.saveHierarchyState(viewState);
-        Bundle clientState = onSaveInstanceState();
-        return new ScreenState(getClass(), containerId, tag, viewState, clientState);
+        return new ScreenState(getClass(), containerId, tag, viewState, persistentData);
+    }
+
+    protected abstract View onAdd(int animationCode);
+
+    protected void onActivitySaveInstanceState() {
+    }
+
+    protected void onRemove(int animationCode) {
+        confirmRemoval();
+    }
+
+    protected boolean onBackPressed() {
+        return false;
     }
 
     public final int getContainerId() {
         return containerId;
     }
 
+    public Bundle getPersistentData() {
+        return persistentData;
+    }
+
+    public ScreensManager getScreensManager() {
+        return screensManager;
+    }
+
     public Activity getActivity() {
-        return activity;
+        return screensManager.getActivity();
     }
 
     public boolean isAdded() {
@@ -60,21 +78,15 @@ public abstract class Screen {
         return tag;
     }
 
-    protected abstract View onAdd(Bundle savedInstanceState);
-
-    protected Bundle onSaveInstanceState() {
-        return null;
-    }
-
-    protected void onRemove() {
-    }
-
     protected View getView() {
         return view;
     }
 
-    protected boolean onBackPressed() {
-        return false;
+    protected void confirmRemoval() {
+        screensManager.onScreenRemovalConfirmed(this);
+        this.screensManager = null;
+        this.containerId = 0;
+        this.view = null;
     }
 
 }

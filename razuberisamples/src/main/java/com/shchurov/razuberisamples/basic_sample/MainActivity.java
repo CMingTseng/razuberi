@@ -8,7 +8,7 @@ import com.shchurov.razuberi.core.ScreensManager;
 import com.shchurov.razuberi.helpers.history.HistoryScreensManager;
 import com.shchurov.razuberisamples.R;
 
-import java.util.LinkedList;
+import java.util.List;
 
 public class MainActivity extends ScreensActivity {
 
@@ -28,15 +28,12 @@ public class MainActivity extends ScreensActivity {
     }
 
     private void setupScreens() {
-        LinkedList<Screen> screens = screensManager.getAddedScreens();
+        List<Screen> screens = screensManager.getAddedScreens();
         if (screens.isEmpty()) {
             ListScreen listScreen = new ListScreen();
             screensManager.add(listScreen, R.id.fl_main_container, ListScreen.SCREEN_TAG);
-        } else {
-
         }
     }
-
 
 
 }

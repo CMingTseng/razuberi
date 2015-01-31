@@ -13,7 +13,7 @@ public class ScreenState implements Parcelable {
     private int containerId;
     private String tag;
     private SparseArray<Parcelable> viewState;
-    private Bundle clientState;
+    private Bundle persistentData;
 
     ScreenState(Class<? extends Screen> screenClass, int containerId, String tag,
                 SparseArray<Parcelable> viewState, Bundle clientState) {
@@ -21,7 +21,7 @@ public class ScreenState implements Parcelable {
         this.containerId = containerId;
         this.tag = tag;
         this.viewState = viewState;
-        this.clientState = clientState;
+        this.persistentData = persistentData;
     }
 
     public Class<? extends Screen> getScreenClass() {
@@ -40,8 +40,8 @@ public class ScreenState implements Parcelable {
         return viewState;
     }
 
-    public Bundle getSavedInstanceState() {
-        return clientState;
+    public Bundle getPersistentData() {
+        return persistentData;
     }
 
     @Override
@@ -57,7 +57,7 @@ public class ScreenState implements Parcelable {
         Bundle hackBundle = new Bundle();
         hackBundle.putSparseParcelableArray(BUNDLE_HACK_KEY, viewState);
         dest.writeBundle(hackBundle);
-        dest.writeBundle(clientState);
+        dest.writeBundle(persistentData);
     }
 
     public static final Parcelable.Creator<ScreenState> CREATOR = new Parcelable.Creator<ScreenState>() {
@@ -68,8 +68,8 @@ public class ScreenState implements Parcelable {
             String tag = in.readString();
             Bundle hackBundle = in.readBundle();
             SparseArray<Parcelable> viewState = hackBundle.getSparseParcelableArray(BUNDLE_HACK_KEY);
-            Bundle clientState = in.readBundle();
-            return new ScreenState(screenClass, containerId, tag, viewState, clientState);
+            Bundle persistentData = in.readBundle();
+            return new ScreenState(screenClass, containerId, tag, viewState, persistentData);
         }
 
         public ScreenState[] newArray(int size) {
