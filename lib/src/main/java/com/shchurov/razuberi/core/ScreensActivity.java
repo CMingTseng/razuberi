@@ -10,7 +10,7 @@ public abstract class ScreensActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        screensManager = createScreensManager(savedInstanceState);
+        screensManager = new ScreensManager(this, savedInstanceState);
     }
 
     @Override
@@ -22,7 +22,5 @@ public abstract class ScreensActivity extends Activity {
     protected ScreensManager getScreensManager() {
         return screensManager;
     }
-
-    protected abstract  ScreensManager createScreensManager(Bundle savedInstanceState);
 
 }

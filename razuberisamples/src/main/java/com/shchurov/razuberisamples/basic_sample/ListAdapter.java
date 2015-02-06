@@ -36,7 +36,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
         ListItem item = items.get(i);
         viewHolder.llItem.setBackgroundColor(item.color);
         int textColor = determineTextColor(item.color);
-        viewHolder.tvText1.setText("#" + item.color);
+        viewHolder.tvText1.setText("#" + Integer.toHexString(item.color));
         viewHolder.tvText1.setTextColor(textColor);
         viewHolder.tvText2.setText(item.description);
         viewHolder.tvText2.setTextColor(textColor);
