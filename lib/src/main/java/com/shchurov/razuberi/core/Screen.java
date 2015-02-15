@@ -1,6 +1,7 @@
 package com.shchurov.razuberi.core;
 
 import android.app.Activity;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.util.SparseArray;
@@ -24,7 +25,7 @@ public abstract class Screen {
         if (persistentData != null) {
             this.persistentData = persistentData;
         }
-        view = onAdd(animationCode);
+        view = onAdd(animationCode, viewState != null);
         if (viewState != null) {
             view.restoreHierarchyState(viewState);
         }
@@ -41,7 +42,7 @@ public abstract class Screen {
         return new ScreenState(getClass(), containerId, tag, viewState, persistentData);
     }
 
-    protected abstract View onAdd(int animationCode);
+    protected abstract View onAdd(int animationCode, boolean restoringState);
 
     protected void onActivitySaveInstanceState() {
     }

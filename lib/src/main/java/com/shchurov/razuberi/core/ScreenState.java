@@ -16,7 +16,7 @@ public class ScreenState implements Parcelable {
     private Bundle persistentData;
 
     ScreenState(Class<? extends Screen> screenClass, int containerId, String tag,
-                SparseArray<Parcelable> viewState, Bundle clientState) {
+                SparseArray<Parcelable> viewState, Bundle persistentData) {
         this.screenClass = screenClass;
         this.containerId = containerId;
         this.tag = tag;

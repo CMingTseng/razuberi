@@ -1,6 +1,8 @@
 package com.shchurov.razuberisamples.basic_sample;
 
 import android.os.Bundle;
+import android.util.Log;
+import android.widget.ImageButton;
 
 import com.shchurov.razuberi.core.Screen;
 import com.shchurov.razuberi.core.ScreensActivity;
@@ -15,8 +17,12 @@ public class MainActivity extends ScreensActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.main_activity);
         setupScreens();
+    }
+
+    @Override
+    protected void setContentView() {
+        setContentView(R.layout.main_activity);
     }
 
     private void setupScreens() {
@@ -33,15 +39,11 @@ public class MainActivity extends ScreensActivity {
         items.add(new ListItem(0xfff44336, "Red"));
         items.add(new ListItem(0xffe91e63, "Pink"));
         items.add(new ListItem(0xff9c27b0, "Purple"));
-        items.add(new ListItem(0xff673ab7, "Deep purple"));
         items.add(new ListItem(0xff3f51b5, "Indigo"));
         items.add(new ListItem(0xff2196f3, "Blue"));
         items.add(new ListItem(0xff03a9f4, "Light blue"));
         items.add(new ListItem(0xff00bcd4, "Cyan"));
-        items.add(new ListItem(0xff009688, "Teal"));
-        items.add(new ListItem(0xff4caf50, "Green"));
         items.add(new ListItem(0xff8bc34a, "Light green"));
-        items.add(new ListItem(0xffcddc39, "Yellow"));
         items.add(new ListItem(0xffffeb3b, "Amber"));
         items.add(new ListItem(0xffffc107, "Orange"));
         items.add(new ListItem(0xffff9800, "Deep orange"));

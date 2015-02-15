@@ -1,11 +1,13 @@
 package com.shchurov.razuberisamples.basic_sample;
 
 import android.graphics.Color;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.shchurov.razuberisamples.R;
@@ -34,12 +36,12 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, int i) {
         ListItem item = items.get(i);
-        viewHolder.llItem.setBackgroundColor(item.color);
+        viewHolder.cvItemRoot.setBackgroundColor(item.color);
         int textColor = determineTextColor(item.color);
-        viewHolder.tvText1.setText("#" + Integer.toHexString(item.color));
-        viewHolder.tvText1.setTextColor(textColor);
-        viewHolder.tvText2.setText(item.description);
-        viewHolder.tvText2.setTextColor(textColor);
+        viewHolder.tvDescription.setText(item.description);
+        viewHolder.tvDescription.setTextColor(textColor);
+        viewHolder.tvColor.setText("#" + Integer.toHexString(item.color).toUpperCase());
+        viewHolder.tvColor.setTextColor(textColor);
     }
 
     @Override
@@ -51,7 +53,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
         double a = 1 - (RED_FACTOR * Color.red(backgroundColor)
                 + GREEN_FACTOR * Color.green(backgroundColor) + BLUE_FACTOR * Color.blue(backgroundColor)) / 255;
         if (a < WHITE_THRESHOLD) {
-            return Color.BLACK;
+            return Color.DKGRAY;
         } else {
             return Color.WHITE;
         }
@@ -59,15 +61,15 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
 
     class ViewHolder extends RecyclerView.ViewHolder {
 
-        LinearLayout llItem;
-        TextView tvText1;
-        TextView tvText2;
+        CardView cvItemRoot;
+        TextView tvDescription;
+        TextView tvColor;
 
         ViewHolder(View itemView) {
             super(itemView);
-            llItem = (LinearLayout) itemView.findViewById(R.id.ll_item);
-            tvText1 = (TextView) itemView.findViewById(R.id.tv_text1);
-            tvText2 = (TextView) itemView.findViewById(R.id.tv_text2);
+            cvItemRoot = (CardView) itemView.findViewById(R.id.cv_item_root);
+            tvDescription = (TextView) itemView.findViewById(R.id.tv_description);
+            tvColor = (TextView) itemView.findViewById(R.id.tv_color);
         }
 
     }

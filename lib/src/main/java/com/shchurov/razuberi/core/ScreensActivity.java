@@ -2,6 +2,7 @@ package com.shchurov.razuberi.core;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 
 public abstract class ScreensActivity extends Activity {
 
@@ -10,8 +11,11 @@ public abstract class ScreensActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView();
         screensManager = new ScreensManager(this, savedInstanceState);
     }
+
+    protected abstract void setContentView();
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
