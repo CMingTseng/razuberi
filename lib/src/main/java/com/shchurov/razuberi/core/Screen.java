@@ -4,8 +4,10 @@ import android.app.Activity;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.util.Log;
 import android.util.SparseArray;
 import android.view.View;
+import android.view.ViewGroup;
 
 public abstract class Screen {
 
@@ -17,15 +19,15 @@ public abstract class Screen {
     private int containerId;
     private Bundle persistentData = new Bundle();
 
-    View performAdd(ScreensManager screensManager, String tag, int containerId, Bundle persistentData,
+    View performAdd(ScreensManager screensManager, String tag, ViewGroup container, Bundle persistentData,
                     SparseArray<Parcelable> viewState, int animationCode) {
         this.screensManager = screensManager;
         this.tag = tag;
-        this.containerId = containerId;
+        this.containerId = container.getId();
         if (persistentData != null) {
             this.persistentData = persistentData;
         }
-        view = onAdd(animationCode, viewState != null);
+        view = onAdd(container, animationCode, viewState != null);
         if (viewState != null) {
             view.restoreHierarchyState(viewState);
         }
@@ -42,7 +44,7 @@ public abstract class Screen {
         return new ScreenState(getClass(), containerId, tag, viewState, persistentData);
     }
 
-    protected abstract View onAdd(int animationCode, boolean restoringState);
+    protected abstract View onAdd(ViewGroup parentView, int animationCode, boolean restoringState);
 
     protected void onActivitySaveInstanceState() {
     }

@@ -3,7 +3,6 @@ package com.shchurov.razuberi.core;
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.util.Log;
 import android.util.SparseArray;
 import android.view.View;
 import android.view.ViewGroup;
@@ -59,8 +58,8 @@ public class ScreensManager {
     private void add(Screen screen, int containerId, String screenTag, Bundle persistentData,
                      SparseArray<Parcelable> viewState, int animationCode) {
         addedScreens.put(screenTag, screen);
-        View screenView = screen.performAdd(this, screenTag, containerId, persistentData, viewState, animationCode);
         ViewGroup container = (ViewGroup) activity.findViewById(containerId);
+        View screenView = screen.performAdd(this, screenTag, container, persistentData, viewState, animationCode);
         container.addView(screenView);
     }
 
@@ -95,7 +94,7 @@ public class ScreensManager {
     }
 
     void onScreenRemovalConfirmed(Screen screen) {
-        addedScreens.remove(screen);
+        addedScreens.remove(screen.getTag());
         ViewGroup container = (ViewGroup) activity.findViewById(screen.getContainerId());
         container.removeView(screen.getView());
     }
@@ -112,7 +111,7 @@ public class ScreensManager {
         return history.isEmpty() ? null : history.remove(history.size() - 1);
     }
 
-    protected boolean onBackPressed() {
+    public boolean onBackPressed() {
         for (Screen screen : addedScreens.values()) {
             if (screen.onBackPressed())
                 return true;
