@@ -7,36 +7,41 @@ import android.util.SparseArray;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.shchurov.razuberi.history.HistoryEntry;
+
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
 public class ScreensManager {
 
     private static final String SAVE_ADDED_SCREENS_KEY = "razuberi_saved_screens";
-    private static final String SAVE_HISTORY_KEY = "razuberi_saved_history";
+    public static final int ANIMATION_CODE_NONE = -1;
 
     private LinkedHashMap<String, Screen> addedScreens;
-    private ArrayList<HistoryEntry> history;
     private Activity activity;
 
     public ScreensManager(Activity activity, Bundle savedState) {
         this.activity = activity;
         addedScreens = new LinkedHashMap<>();
-        if (savedState != null) {
-            restoreState(savedState);
-        } else {
-            history = new ArrayList<>();
+        restoreScreensManagerState(savedState);
+    }
+
+    protected void restoreScreensManagerState(Bundle savedState) {
+        if (savedState == null)
+            return;
+        ArrayList<ScreenState> addedScreenStates = savedState.getParcelableArrayList(SAVE_ADDED_SCREENS_KEY);
+        for (ScreenState screenState : addedScreenStates) {
+            restoreStateAndAdd(screenState, ANIMATION_CODE_NONE);
         }
     }
 
-    public void onSaveInstanceState(Bundle instanceState) {
+    protected void saveScreensManagerState(Bundle instanceState) {
         ArrayList<ScreenState> addedScreenStates = new ArrayList<>();
         for (Screen screen : addedScreens.values()) {
             screen.onActivitySaveInstanceState();
             addedScreenStates.add(screen.getScreenState());
         }
         instanceState.putParcelableArrayList(SAVE_ADDED_SCREENS_KEY, addedScreenStates);
-        instanceState.putParcelableArrayList(SAVE_HISTORY_KEY, history);
     }
 
     public Screen restoreStateAndAdd(ScreenState screenState, int animationCode) {
@@ -85,33 +90,13 @@ public class ScreensManager {
         return activity;
     }
 
-    private void restoreState(Bundle savedState) {
-        ArrayList<ScreenState> addedScreenStates = savedState.getParcelableArrayList(SAVE_ADDED_SCREENS_KEY);
-        history = savedState.getParcelableArrayList(SAVE_HISTORY_KEY);
-        for (ScreenState screenState : addedScreenStates) {
-            restoreStateAndAdd(screenState, Screen.ANIMATION_CODE_NONE);
-        }
-    }
-
     void onScreenRemovalConfirmed(Screen screen) {
         addedScreens.remove(screen.getTag());
         ViewGroup container = (ViewGroup) activity.findViewById(screen.getContainerId());
         container.removeView(screen.getView());
     }
 
-    public ArrayList<HistoryEntry> getHistory() {
-        return new ArrayList<>(history);
-    }
-
-    public void addToHistory(HistoryEntry entry) {
-        history.add(entry);
-    }
-
-    public HistoryEntry popLastHistoryEntry() {
-        return history.isEmpty() ? null : history.remove(history.size() - 1);
-    }
-
-    public boolean onBackPressed() {
+    protected boolean onBackPressed() {
         for (Screen screen : addedScreens.values()) {
             if (screen.onBackPressed())
                 return true;

@@ -24,7 +24,7 @@ public class CScreen extends Screen {
     }
 
     private void setupAnimations(int animationCode, final View layout) {
-        if (animationCode != MainActivity.ANIMATION_CODE_ADD_FORWARD)
+        if (animationCode != MainActivity.ANIMATION_CODE_ADDED)
             return;
         layout.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
             @Override
@@ -45,7 +45,7 @@ public class CScreen extends Screen {
 
     @Override
     protected void onRemove(int animationCode) {
-        if (animationCode == MainActivity.ANIMATION_CODE_REMOVE_BACKWARD) {
+        if (animationCode == MainActivity.ANIMATION_CODE_BACK_PRESSED) {
             runRemoveAnimation();
         } else {
             super.onRemove(animationCode);

@@ -11,8 +11,6 @@ import android.view.ViewGroup;
 
 public abstract class Screen {
 
-    public static final int ANIMATION_CODE_NONE = -1;
-
     private ScreensManager screensManager;
     private View view;
     private String tag;

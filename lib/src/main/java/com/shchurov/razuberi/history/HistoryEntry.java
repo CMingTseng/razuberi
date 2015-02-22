@@ -1,7 +1,9 @@
-package com.shchurov.razuberi.core;
+package com.shchurov.razuberi.history;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+
+import com.shchurov.razuberi.core.ScreenState;
 
 import java.util.LinkedList;
 
@@ -13,13 +15,8 @@ public class HistoryEntry implements Parcelable {
         this.screenStates = screenStates;
     }
 
-    public HistoryEntry(ScreenState screenState) {
-        this.screenStates = new LinkedList<>();
-        screenStates.add(screenState);
-    }
-
-    public LinkedList<ScreenState> getEntryScreens() {
-        return  screenStates;
+    public LinkedList<ScreenState> getEntryScreenStates() {
+        return screenStates;
     }
 
     @Override

@@ -22,13 +22,13 @@ public class BScreen extends Screen {
     }
 
     private void runAddAnimation(final int animationCode, final View layout) {
-        if (animationCode != MainActivity.ANIMATION_CODE_ADD_FORWARD && animationCode != MainActivity.ANIMATION_CODE_ADD_BACKWARD)
+        if (animationCode != MainActivity.ANIMATION_CODE_ADDED && animationCode != MainActivity.ANIMATION_CODE_BACK_PRESSED)
             return;
         layout.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
             @Override
             public boolean onPreDraw() {
                 layout.getViewTreeObserver().removeOnPreDrawListener(this);
-                AnimationUtils.prepareAddScreenAnimation(layout, animationCode == MainActivity.ANIMATION_CODE_ADD_BACKWARD).start();
+                AnimationUtils.prepareAddScreenAnimation(layout, animationCode == MainActivity.ANIMATION_CODE_BACK_PRESSED).start();
                 return true;
             }
         });
@@ -46,7 +46,7 @@ public class BScreen extends Screen {
 
     @Override
     protected void onRemove(int animationCode) {
-        if (animationCode == MainActivity.ANIMATION_CODE_REMOVE_FORWARD || animationCode == MainActivity.ANIMATION_CODE_REMOVE_BACKWARD) {
+        if (animationCode == MainActivity.ANIMATION_CODE_REPLACED || animationCode == MainActivity.ANIMATION_CODE_BACK_PRESSED) {
             runRemoveAnimation(animationCode);
         } else {
             super.onRemove(animationCode);
@@ -54,7 +54,7 @@ public class BScreen extends Screen {
     }
 
     private void runRemoveAnimation(int animationCode) {
-        Animator animator = AnimationUtils.prepareRemoveScreenAnimation(getView(), animationCode == MainActivity.ANIMATION_CODE_REMOVE_FORWARD);
+        Animator animator = AnimationUtils.prepareRemoveScreenAnimation(getView(), animationCode == MainActivity.ANIMATION_CODE_REPLACED);
         animator.addListener(new SimpleAnimatorListener() {
             @Override
             public void onAnimationEnd(Animator animation) {

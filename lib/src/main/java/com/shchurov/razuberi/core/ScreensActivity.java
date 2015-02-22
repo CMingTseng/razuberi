@@ -2,29 +2,36 @@ package com.shchurov.razuberi.core;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.util.Log;
 
-public abstract class ScreensActivity extends Activity {
+public abstract class ScreensActivity<T extends ScreensManager> extends Activity {
 
-    private ScreensManager screensManager;
+    private T screensManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView();
-        screensManager = new ScreensManager(this, savedInstanceState);
+        screensManager = createScreensManager(savedInstanceState);
     }
+
+    protected abstract T createScreensManager(Bundle savedInstanceState);
 
     protected abstract void setContentView();
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        screensManager.onSaveInstanceState(outState);
+        screensManager.saveScreensManagerState(outState);
         super.onSaveInstanceState(outState);
     }
 
-    protected ScreensManager getScreensManager() {
+    protected T getScreensManager() {
         return screensManager;
     }
 
+    @Override
+    public void onBackPressed() {
+        if (!getScreensManager().onBackPressed()) {
+            super.onBackPressed();
+        }
+    }
 }

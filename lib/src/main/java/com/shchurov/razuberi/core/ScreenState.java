@@ -28,7 +28,7 @@ public class ScreenState implements Parcelable {
         return screenClass;
     }
 
-    int getContainerId() {
+    public int getContainerId() {
         return containerId;
     }
 

@@ -23,9 +23,9 @@ public class AScreen extends Screen {
     }
 
     private void setupAnimations(int animationCode, View layout) {
-        if (animationCode == MainActivity.ANIMATION_CODE_ADD_FORWARD) {
+        if (animationCode == MainActivity.ANIMATION_CODE_ADDED) {
             runLaunchAnimation(layout);
-        } else if (animationCode == MainActivity.ANIMATION_CODE_ADD_BACKWARD) {
+        } else if (animationCode == MainActivity.ANIMATION_CODE_BACK_PRESSED) {
             runAddBackwardAnimation(layout);
         }
     }
@@ -62,7 +62,7 @@ public class AScreen extends Screen {
 
     @Override
     protected void onRemove(int animationCode) {
-        if (animationCode == MainActivity.ANIMATION_CODE_REMOVE_FORWARD) {
+        if (animationCode == MainActivity.ANIMATION_CODE_REPLACED) {
             runRemoveAnimation();
         } else {
             super.onRemove(animationCode);
