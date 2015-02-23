@@ -23,9 +23,9 @@ public class AScreen extends Screen {
     }
 
     private void setupAnimations(int animationCode, View layout) {
-        if (animationCode == MainActivity.ANIMATION_CODE_ADDED) {
+        if (animationCode == AnimationUtils.ANIMATION_CODE_ADDED) {
             runLaunchAnimation(layout);
-        } else if (animationCode == MainActivity.ANIMATION_CODE_BACK_PRESSED) {
+        } else if (animationCode == AnimationUtils.ANIMATION_CODE_BACK_PRESSED) {
             runAddBackwardAnimation(layout);
         }
     }
@@ -44,7 +44,7 @@ public class AScreen extends Screen {
             @Override
             public boolean onPreDraw() {
                 layout.getViewTreeObserver().removeOnPreDrawListener(this);
-                AnimationUtils.prepareAddScreenAnimation(layout, true).start();
+                AnimationUtils.prepareAddScreenAnimation(layout, AnimationUtils.ANIMATION_CODE_BACK_PRESSED).start();
                 return true;
             }
         });
@@ -62,7 +62,7 @@ public class AScreen extends Screen {
 
     @Override
     protected void onRemove(int animationCode) {
-        if (animationCode == MainActivity.ANIMATION_CODE_REPLACED) {
+        if (animationCode == AnimationUtils.ANIMATION_CODE_REPLACED) {
             runRemoveAnimation();
         } else {
             super.onRemove(animationCode);
@@ -70,7 +70,7 @@ public class AScreen extends Screen {
     }
 
     private void runRemoveAnimation() {
-        Animator animator = AnimationUtils.prepareRemoveScreenAnimation(getView(), true);
+        Animator animator = AnimationUtils.prepareRemoveScreenAnimation(getView(), AnimationUtils.ANIMATION_CODE_REPLACED);
         animator.addListener(new SimpleAnimatorListener() {
             @Override
             public void onAnimationEnd(Animator animation) {

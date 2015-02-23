@@ -8,31 +8,16 @@ import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 
+import com.shchurov.razuberi.history.HistoryScreensManager;
+
 public class AnimationUtils {
 
+    public static final int ANIMATION_CODE_ADDED = 1;
+    public static final int ANIMATION_CODE_REPLACED = 2;
+    public static final int ANIMATION_CODE_BACK_PRESSED = HistoryScreensManager.ANIMATION_CODE_BACK_PRESSED;
     private static final float MIN_SCALE = 0.4f;
 
-    public static Animator prepareRemoveScreenAnimation(View screenView, boolean toLeft) {
-        ObjectAnimator scaleXAnimator = ObjectAnimator.ofFloat(screenView, "scaleX", 1f, MIN_SCALE);
-        ObjectAnimator scaleYAnimator = ObjectAnimator.ofFloat(screenView, "scaleY", 1f, MIN_SCALE);
-        AnimatorSet scaleAnimator = new AnimatorSet();
-        scaleAnimator.playTogether(scaleXAnimator, scaleYAnimator);
-        scaleAnimator.setDuration(300);
-        scaleAnimator.setInterpolator(new DecelerateInterpolator());
-        int displayWidth = screenView.getResources().getDisplayMetrics().widthPixels;
-        float toTranslationX = (displayWidth + screenView.getWidth()) / 2;
-        if (toLeft) {
-            toTranslationX = -toTranslationX;
-        }
-        ObjectAnimator translationAnimator = ObjectAnimator.ofFloat(screenView, "translationX", 0, toTranslationX);
-        translationAnimator.setDuration(500);
-        translationAnimator.setInterpolator(new AccelerateInterpolator());
-        AnimatorSet removeAnimator = new AnimatorSet();
-        removeAnimator.play(scaleAnimator).before(translationAnimator);
-        return removeAnimator;
-    }
-
-    public static Animator prepareAddScreenAnimation(final View screenView, boolean fromLeft) {
+    public static Animator prepareAddScreenAnimation(final View screenView, int animationCode) {
         screenView.setVisibility(View.INVISIBLE);
         screenView.setScaleX(MIN_SCALE);
         screenView.setScaleY(MIN_SCALE);
@@ -44,7 +29,7 @@ public class AnimationUtils {
         scaleAnimator.setInterpolator(new AccelerateInterpolator());
         int displayWidth = screenView.getResources().getDisplayMetrics().widthPixels;
         float fromTranslationX = (displayWidth + screenView.getWidth()) / 2;
-        if (fromLeft) {
+        if (animationCode == ANIMATION_CODE_BACK_PRESSED) {
             fromTranslationX = -fromTranslationX;
         }
         ObjectAnimator translationAnimator = ObjectAnimator.ofFloat(screenView, "translationX", fromTranslationX, 0);
@@ -59,6 +44,26 @@ public class AnimationUtils {
         });
         AnimatorSet removeAnimator = new AnimatorSet();
         removeAnimator.play(translationAnimator).before(scaleAnimator);
+        return removeAnimator;
+    }
+
+    public static Animator prepareRemoveScreenAnimation(View screenView, int animationCode) {
+        ObjectAnimator scaleXAnimator = ObjectAnimator.ofFloat(screenView, "scaleX", 1f, MIN_SCALE);
+        ObjectAnimator scaleYAnimator = ObjectAnimator.ofFloat(screenView, "scaleY", 1f, MIN_SCALE);
+        AnimatorSet scaleAnimator = new AnimatorSet();
+        scaleAnimator.playTogether(scaleXAnimator, scaleYAnimator);
+        scaleAnimator.setDuration(300);
+        scaleAnimator.setInterpolator(new DecelerateInterpolator());
+        int displayWidth = screenView.getResources().getDisplayMetrics().widthPixels;
+        float toTranslationX = (displayWidth + screenView.getWidth()) / 2;
+        if (animationCode == ANIMATION_CODE_REPLACED) {
+            toTranslationX = -toTranslationX;
+        }
+        ObjectAnimator translationAnimator = ObjectAnimator.ofFloat(screenView, "translationX", 0, toTranslationX);
+        translationAnimator.setDuration(500);
+        translationAnimator.setInterpolator(new AccelerateInterpolator());
+        AnimatorSet removeAnimator = new AnimatorSet();
+        removeAnimator.play(scaleAnimator).before(translationAnimator);
         return removeAnimator;
     }
 

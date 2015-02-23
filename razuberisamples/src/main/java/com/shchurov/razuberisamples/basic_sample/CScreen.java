@@ -23,14 +23,14 @@ public class CScreen extends Screen {
         return layout;
     }
 
-    private void setupAnimations(int animationCode, final View layout) {
-        if (animationCode != MainActivity.ANIMATION_CODE_ADDED)
+    private void setupAnimations(final int animationCode, final View layout) {
+        if (animationCode != AnimationUtils.ANIMATION_CODE_ADDED)
             return;
         layout.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
             @Override
             public boolean onPreDraw() {
                 layout.getViewTreeObserver().removeOnPreDrawListener(this);
-                AnimationUtils.prepareAddScreenAnimation(layout, false).start();
+                AnimationUtils.prepareAddScreenAnimation(layout, animationCode).start();
                 return true;
             }
         });
@@ -45,7 +45,7 @@ public class CScreen extends Screen {
 
     @Override
     protected void onRemove(int animationCode) {
-        if (animationCode == MainActivity.ANIMATION_CODE_BACK_PRESSED) {
+        if (animationCode == AnimationUtils.ANIMATION_CODE_BACK_PRESSED) {
             runRemoveAnimation();
         } else {
             super.onRemove(animationCode);
@@ -53,7 +53,7 @@ public class CScreen extends Screen {
     }
 
     private void runRemoveAnimation() {
-        Animator animator = AnimationUtils.prepareRemoveScreenAnimation(getView(), false);
+        Animator animator = AnimationUtils.prepareRemoveScreenAnimation(getView(), AnimationUtils.ANIMATION_CODE_BACK_PRESSED);
         animator.addListener(new SimpleAnimatorListener() {
             @Override
             public void onAnimationEnd(Animator animation) {

@@ -12,10 +12,6 @@ import java.util.List;
 
 public class MainActivity extends ScreensActivity<HistoryScreensManager> implements OnShowNextScreenListener {
 
-    public static final int ANIMATION_CODE_ADDED = 1;
-    public static final int ANIMATION_CODE_REPLACED = 2;
-    public static final int ANIMATION_CODE_BACK_PRESSED = HistoryScreensManager.ANIMATION_CODE_BACK_PRESSED;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,7 +32,7 @@ public class MainActivity extends ScreensActivity<HistoryScreensManager> impleme
         List<Screen> screens = getScreensManager().getAddedScreens();
         if (screens.isEmpty()) {
             AScreen aScreen = new AScreen();
-            getScreensManager().add(aScreen, R.id.fl_main_container, AScreen.SCREEN_TAG, ANIMATION_CODE_ADDED);
+            getScreensManager().add(aScreen, R.id.fl_main_container, AScreen.SCREEN_TAG, AnimationUtils.ANIMATION_CODE_ADDED);
         }
     }
 
@@ -46,9 +42,11 @@ public class MainActivity extends ScreensActivity<HistoryScreensManager> impleme
         ArrayList<Screen> addedScreens = screensManager.getAddedScreens();
         String currentScreenTag = addedScreens.get(addedScreens.size() - 1).getTag();
         if (currentScreenTag.equals(AScreen.SCREEN_TAG)) {
-            screensManager.replace(new BScreen(), R.id.fl_main_container, BScreen.SCREEN_TAG, ANIMATION_CODE_ADDED, ANIMATION_CODE_REPLACED);
+            screensManager.replace(new BScreen(), R.id.fl_main_container, BScreen.SCREEN_TAG,
+                    AnimationUtils.ANIMATION_CODE_ADDED, AnimationUtils.ANIMATION_CODE_REPLACED);
         } else if (currentScreenTag.equals(BScreen.SCREEN_TAG)) {
-            screensManager.replace(new CScreen(), R.id.fl_main_container, CScreen.SCREEN_TAG, ANIMATION_CODE_ADDED, ANIMATION_CODE_REPLACED);
+            screensManager.replace(new CScreen(), R.id.fl_main_container, CScreen.SCREEN_TAG,
+                    AnimationUtils.ANIMATION_CODE_ADDED, AnimationUtils.ANIMATION_CODE_REPLACED);
         }
     }
 

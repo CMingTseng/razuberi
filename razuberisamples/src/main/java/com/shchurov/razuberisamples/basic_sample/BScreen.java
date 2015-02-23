@@ -22,13 +22,13 @@ public class BScreen extends Screen {
     }
 
     private void runAddAnimation(final int animationCode, final View layout) {
-        if (animationCode != MainActivity.ANIMATION_CODE_ADDED && animationCode != MainActivity.ANIMATION_CODE_BACK_PRESSED)
+        if (animationCode != AnimationUtils.ANIMATION_CODE_ADDED && animationCode != AnimationUtils.ANIMATION_CODE_BACK_PRESSED)
             return;
         layout.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
             @Override
             public boolean onPreDraw() {
                 layout.getViewTreeObserver().removeOnPreDrawListener(this);
-                AnimationUtils.prepareAddScreenAnimation(layout, animationCode == MainActivity.ANIMATION_CODE_BACK_PRESSED).start();
+                AnimationUtils.prepareAddScreenAnimation(layout, animationCode).start();
                 return true;
             }
         });
@@ -46,7 +46,7 @@ public class BScreen extends Screen {
 
     @Override
     protected void onRemove(int animationCode) {
-        if (animationCode == MainActivity.ANIMATION_CODE_REPLACED || animationCode == MainActivity.ANIMATION_CODE_BACK_PRESSED) {
+        if (animationCode == AnimationUtils.ANIMATION_CODE_REPLACED || animationCode == AnimationUtils.ANIMATION_CODE_BACK_PRESSED) {
             runRemoveAnimation(animationCode);
         } else {
             super.onRemove(animationCode);
@@ -54,7 +54,7 @@ public class BScreen extends Screen {
     }
 
     private void runRemoveAnimation(int animationCode) {
-        Animator animator = AnimationUtils.prepareRemoveScreenAnimation(getView(), animationCode == MainActivity.ANIMATION_CODE_REPLACED);
+        Animator animator = AnimationUtils.prepareRemoveScreenAnimation(getView(), animationCode);
         animator.addListener(new SimpleAnimatorListener() {
             @Override
             public void onAnimationEnd(Animator animation) {
