@@ -19,6 +19,18 @@ public abstract class ScreensActivity<T extends ScreensManager> extends Activity
     protected abstract void setContentView();
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        screensManager.onActivityStart();
+    }
+
+    @Override
+    protected void onStop() {
+        screensManager.onActivityStop();
+        super.onStop();
+    }
+
+    @Override
     protected void onSaveInstanceState(Bundle outState) {
         screensManager.saveScreensManagerState(outState);
         super.onSaveInstanceState(outState);

@@ -44,6 +44,12 @@ public abstract class Screen {
 
     protected abstract View onAdd(ViewGroup parentView, int animationCode, boolean restoringState);
 
+    protected void onActivityStart() {
+    }
+
+    protected void onActivityStop() {
+    }
+
     protected void onActivitySaveInstanceState() {
     }
 

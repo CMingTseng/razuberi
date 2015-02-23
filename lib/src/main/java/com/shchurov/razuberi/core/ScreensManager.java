@@ -7,8 +7,6 @@ import android.util.SparseArray;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.shchurov.razuberi.history.HistoryEntry;
-
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
@@ -78,6 +76,24 @@ public class ScreensManager {
         return screenState;
     }
 
+    void onScreenRemovalConfirmed(Screen screen) {
+        addedScreens.remove(screen.getTag());
+        ViewGroup container = (ViewGroup) activity.findViewById(screen.getContainerId());
+        container.removeView(screen.getView());
+    }
+
+    protected void onActivityStart() {
+        for (Screen screen : addedScreens.values()) {
+            screen.onActivityStart();
+        }
+    }
+
+    protected void onActivityStop() {
+        for (Screen screen : addedScreens.values()) {
+            screen.onActivityStop();
+        }
+    }
+
     public ArrayList<Screen> getAddedScreens() {
         return new ArrayList<>(addedScreens.values());
     }
@@ -88,12 +104,6 @@ public class ScreensManager {
 
     public Activity getActivity() {
         return activity;
-    }
-
-    void onScreenRemovalConfirmed(Screen screen) {
-        addedScreens.remove(screen.getTag());
-        ViewGroup container = (ViewGroup) activity.findViewById(screen.getContainerId());
-        container.removeView(screen.getView());
     }
 
     protected boolean onBackPressed() {
