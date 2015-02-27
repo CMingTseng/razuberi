@@ -5,6 +5,9 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.SparseArray;
 
+/**
+ *  ScreenState is used to take a snapshot of some screen so it can be removed and restored later.
+ */
 public class ScreenState implements Parcelable {
 
     private static final String BUNDLE_HACK_KEY = "key";
@@ -24,24 +27,30 @@ public class ScreenState implements Parcelable {
         this.persistentData = persistentData;
     }
 
-    public Class<? extends Screen> getScreenClass() {
-        return screenClass;
-    }
-
+    /**
+     * @return Id of a view where the saved screen's view was added.
+     */
     public int getContainerId() {
         return containerId;
     }
 
+    /**
+     * @return Tag of the saved screen.
+     */
     public String getTag() {
         return tag;
     }
 
-    SparseArray<Parcelable> getViewState() {
-        return viewState;
+    Bundle getPersistentData() {
+        return persistentData;
     }
 
-    public Bundle getPersistentData() {
-        return persistentData;
+    Class<? extends Screen> getScreenClass() {
+        return screenClass;
+    }
+
+    SparseArray<Parcelable> getViewState() {
+        return viewState;
     }
 
     @Override

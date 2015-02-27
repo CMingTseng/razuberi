@@ -15,6 +15,9 @@ public class HistoryEntry implements Parcelable {
         this.screenStates = screenStates;
     }
 
+    /**
+     * @return The list of states of screens that were added on this step of the history.
+     */
     public LinkedList<ScreenState> getEntryScreenStates() {
         return screenStates;
     }

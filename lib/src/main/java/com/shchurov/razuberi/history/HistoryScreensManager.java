@@ -1,23 +1,33 @@
 package com.shchurov.razuberi.history;
 
-import android.app.Activity;
 import android.os.Bundle;
 
 import com.shchurov.razuberi.core.Screen;
 import com.shchurov.razuberi.core.ScreenState;
+import com.shchurov.razuberi.core.ScreensActivity;
 import com.shchurov.razuberi.core.ScreensManager;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
 
+/**
+ * HistoryScreensManager supports history operations:
+ * {@link #replace(com.shchurov.razuberi.core.Screen, int, String, int, int)} and
+ * {@link #popHistory(int, int)}. It allows you to easily manage screens' flow.
+ */
 public class HistoryScreensManager extends ScreensManager {
 
     private static final String SAVE_HISTORY_KEY = "razuberi_saved_history";
+    /**
+     * This animation code is passed to {@link Screen#onRemove(int)} and
+     * {@link Screen#onAdd(android.view.ViewGroup, int)} when the HistoryScreensManager
+     * pops history on back button press.
+     */
     public static final int ANIMATION_CODE_BACK_PRESSED = -2;
 
     private ArrayList<HistoryEntry> history;
 
-    public HistoryScreensManager(Activity activity, Bundle savedState) {
+    public HistoryScreensManager(ScreensActivity activity, Bundle savedState) {
         super(activity, savedState);
     }
 
@@ -37,14 +47,25 @@ public class HistoryScreensManager extends ScreensManager {
         super.saveScreensManagerState(instanceState);
     }
 
+    /**
+     * @return the history.
+     */
     public ArrayList<HistoryEntry> getHistory() {
         return history;
     }
 
-    public void addToHistory(HistoryEntry entry) {
-        history.add(entry);
-    }
-
+    /**
+     * Replaces all added screens in the container view with the specified one.
+     *
+     * @param screenToBeAdded     The screen to be added.
+     * @param containerId         Id of the container.
+     * @param toBeAddedTag        Tag of the screen to be added. It can be used to get the reference to the screen
+     *                            by calling {@link #getScreenByTag(String)}.
+     * @param addAnimationCode    The animation code to be passed to {@link Screen#onAdd(android.view.ViewGroup, int)}.
+     *                            It is used to specify which animation should be run when the screen is added.
+     * @param removeAnimationCode The animation code to be passed to {@link Screen#onRemove(int)}.
+     *                            It is used to specify which animation should be run before the screen is removed.
+     */
     public void replace(Screen screenToBeAdded, int containerId, String toBeAddedTag, int addAnimationCode, int removeAnimationCode) {
         LinkedList<ScreenState> addedScreenStates = new LinkedList<>();
         LinkedList<Screen> addedScreens = new LinkedList<>(getAddedScreens());
@@ -55,11 +76,19 @@ public class HistoryScreensManager extends ScreensManager {
             }
         }
         if (!addedScreenStates.isEmpty()) {
-            addToHistory(new HistoryEntry(addedScreenStates));
+            history.add(new HistoryEntry(addedScreenStates));
         }
         add(screenToBeAdded, containerId, toBeAddedTag, addAnimationCode);
     }
 
+    /**
+     * Opposite to {@link #replace(com.shchurov.razuberi.core.Screen, int, String, int, int)}.
+     *
+     * @param addAnimationCode    The animation code to be passed to {@link Screen#onAdd(android.view.ViewGroup, int)}.
+     *                            It is used to specify which animation should be run when the screen is added.
+     * @param removeAnimationCode The animation code to be passed to {@link Screen#onRemove(int)}.
+     *                            It is used to specify which animation should be run before the screen is removed.
+     */
     public void popHistory(int addAnimationCode, int removeAnimationCode) {
         if (history.isEmpty())
             return;

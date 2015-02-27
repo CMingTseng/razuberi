@@ -1,6 +1,5 @@
 package com.shchurov.razuberi.core;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.util.SparseArray;
@@ -10,15 +9,23 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
+/**
+ * It is used to manage {@link com.shchurov.razuberi.core.Screen}s.
+ * Call {@link ScreensActivity#getScreensManager()} to obtain an instance.
+ */
 public class ScreensManager {
 
     private static final String SAVE_ADDED_SCREENS_KEY = "razuberi_saved_screens";
-    public static final int ANIMATION_CODE_NONE = -1;
+    /**
+     * This animation code is passed to {@link Screen#onAdd(android.view.ViewGroup, int)} when
+     * the ScreensManager is restoring the screens after re-instantiate of host Activity.
+     */
+    public static final int ANIMATION_CODE_ACTIVITY_RE_INSTANTIATE = -1;
 
     private LinkedHashMap<String, Screen> addedScreens;
-    private Activity activity;
+    private ScreensActivity activity;
 
-    public ScreensManager(Activity activity, Bundle savedState) {
+    public ScreensManager(ScreensActivity activity, Bundle savedState) {
         this.activity = activity;
         addedScreens = new LinkedHashMap<>();
         restoreScreensManagerState(savedState);
@@ -29,7 +36,7 @@ public class ScreensManager {
             return;
         ArrayList<ScreenState> addedScreenStates = savedState.getParcelableArrayList(SAVE_ADDED_SCREENS_KEY);
         for (ScreenState screenState : addedScreenStates) {
-            restoreStateAndAdd(screenState, ANIMATION_CODE_NONE);
+            restoreStateAndAdd(screenState, ANIMATION_CODE_ACTIVITY_RE_INSTANTIATE);
         }
     }
 
@@ -42,6 +49,28 @@ public class ScreensManager {
         instanceState.putParcelableArrayList(SAVE_ADDED_SCREENS_KEY, addedScreenStates);
     }
 
+    /**
+     * Adds a screen to an Activity.
+     *
+     * @param screen        The screen to be added.
+     * @param containerId   Id of the view where the screen's view is to be added.
+     * @param screenTag     Tag of the screen to be added. It can be used to get the reference to the screen
+     *                      by calling {@link #getScreenByTag(String)}.
+     * @param animationCode The animation code to be passed to {@link Screen#onAdd(android.view.ViewGroup, int)}.
+     *                      It is used to specify which animation should be run when the screen is added.
+     */
+    public void add(Screen screen, int containerId, String screenTag, int animationCode) {
+        add(screen, containerId, screenTag, null, null, animationCode);
+    }
+
+    /**
+     * Restores the screen and add it to an Activity.
+     *
+     * @param screenState   Saved state of the screen.
+     * @param animationCode The animation code to be passed to {@link Screen#onAdd(android.view.ViewGroup, int)}.
+     *                      It is used to specify which animation should be run when the screen is added.
+     * @return The restored and added screen.
+     */
     public Screen restoreStateAndAdd(ScreenState screenState, int animationCode) {
         Screen screen = null;
         try {
@@ -54,10 +83,6 @@ public class ScreensManager {
         return screen;
     }
 
-    public void add(Screen screen, int containerId, String screenTag, int animationCode) {
-        add(screen, containerId, screenTag, null, null, animationCode);
-    }
-
     private void add(Screen screen, int containerId, String screenTag, Bundle persistentData,
                      SparseArray<Parcelable> viewState, int animationCode) {
         addedScreens.put(screenTag, screen);
@@ -66,10 +91,27 @@ public class ScreensManager {
         container.addView(screenView);
     }
 
+    /**
+     * Removes the screen from an Activity. Notice that it will be removed only when the
+     * screen's method {@link com.shchurov.razuberi.core.Screen#confirmRemoval()} is called.
+     *
+     * @param screen        The screen to be removed.
+     * @param animationCode The animation code to be passed to {@link Screen#onRemove(int)}.
+     *                      It is used to specify which animation should be run before the screen is removed.
+     */
     public void remove(Screen screen, int animationCode) {
-        screen.performRemove(animationCode);
+        screen.onRemove(animationCode);
     }
 
+    /**
+     * Copies the screen's state and removes it from an Activity. Notice that it will be removed only when the
+     * screen's method {@link com.shchurov.razuberi.core.Screen#confirmRemoval()} is called.
+     *
+     * @param screen        The screen to be removed.
+     * @param animationCode The animation code to be passed to {@link Screen#onRemove(int)}.
+     *                      It is used to specify which animation should be run before the screen is removed.
+     * @return State of the removed screen.
+     */
     public ScreenState getStateAndRemove(Screen screen, int animationCode) {
         ScreenState screenState = screen.getScreenState();
         remove(screen, animationCode);
@@ -94,15 +136,27 @@ public class ScreensManager {
         }
     }
 
+    /**
+     * @return The list of added screens.
+     */
     public ArrayList<Screen> getAddedScreens() {
         return new ArrayList<>(addedScreens.values());
     }
 
+    /**
+     * Finds a screen that was added with the given tag.
+     *
+     * @param tag The tag to search for.
+     * @return a screen with the given tag, null otherwise.
+     */
     public Screen getScreenByTag(String tag) {
         return addedScreens.get(tag);
     }
 
-    public Activity getActivity() {
+    /**
+     * @return host {@link com.shchurov.razuberi.core.ScreensActivity}
+     */
+    public ScreensActivity getActivity() {
         return activity;
     }
 
