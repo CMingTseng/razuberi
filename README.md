@@ -9,7 +9,7 @@ Short info
 In Razuberi the application's UI is composed of `Screen`-objects. They are managed with `ScreensManager` or its subclasses.
 
 `ScreensManager` is the most basic one, it supports only `add()`, `restoreAndAdd()`, `remove()`, `getStateAndRemove()` operations.
-Methods `getStateAndRemove()` and `restoreAndAdd()` work with `ScreenState`-objects, `ScreenState` is a snapshot of a Screen at some point of time. It makes possible to remove `Screen` and add it later without loss its state. `ScreenState` implements `Parcelable` so it can be retained across `Activity` instances.
+Methods `getStateAndRemove()` and `restoreAndAdd()` work with `ScreenState`-objects, `ScreenState` is a snapshot of a `Screen` at some point of time. It makes possible to remove `Screen` and add it later without loss its state. `ScreenState` implements `Parcelable` so it can be retained across `Activity` instances.
 
 There's also `HistoryScreensManager` that supports flow of screens by keeping transitions history and using operations `replace()` and `popHistory()`. However it uses only public methods of basic `ScreensManager` so you can easily implement your own subclass of `ScreensManager` which would be the most suitable for your purposes.
 
