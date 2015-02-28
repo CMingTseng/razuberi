@@ -17,6 +17,7 @@ Quick start
 =======
 
 At first subclass your `Activity` from `ScreensActivity<T extends ScreensManager>`, where `T` is an appropriate subclass of `ScreensManager`. Then you must implement 2 abstract methods:
+
 1. `createScreensManager()` - to instantiate an appropriate subclass of  `ScreensManager`;
 2. `setContentView()` - call `Activity`'s method `setContentView(..)` here instead of doing it in `onCreate()`, it lets you start working with screens right in `onCreate()`.
 
