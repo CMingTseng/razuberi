@@ -21,6 +21,6 @@ At first subclass your `Activity` from `ScreensActivity<T extends ScreensManager
 1. `createScreensManager()` - to instantiate an appropriate subclass of  `ScreensManager`;
 2. `setContentView()` - call `Activity`'s method `setContentView(..)` here instead of doing it in `onCreate()`, it lets you start working with screens right in `onCreate()`.
 
-To obtain an instance of created `ScreensManager` call `getScreensManager()`. Now you can start creating your screens. Subclass your screen from `Screen` and implement its abstract method `onAdd()`, there you must create and return your screen's `View`.
+To obtain an instance of a created `ScreensManager` call `getScreensManager()`. Now you can start creating your screens. Subclass your screen from `Screen` and implement its abstract method `onAdd()`, there you must create and return your screen's `View`.
 
 Also, take a look at [the sample](https://github.com/shchurov/razuberi/tree/master/razuberisamples/src/main/java/com/shchurov/razuberisamples/basic_sample). It shows how to work with animations.
