@@ -16,7 +16,7 @@ public class CScreen extends Screen {
     public static final String SCREEN_TAG = "c_screen";
 
     @Override
-    protected View onAdd(ViewGroup parentView, int animationCode, boolean restoringState) {
+    protected View onAdd(ViewGroup parentView, int animationCode) {
         View layout = LayoutInflater.from(getActivity()).inflate(R.layout.c_screen, parentView, false);
         setupAnimations(animationCode, layout);
         setupSpinner(layout);

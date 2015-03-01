@@ -14,7 +14,7 @@ public class BScreen extends Screen {
     public static final String SCREEN_TAG = "b_screen";
 
     @Override
-    protected View onAdd(ViewGroup parentView, int animationCode, boolean restoringState) {
+    protected View onAdd(ViewGroup parentView, int animationCode) {
         View layout = LayoutInflater.from(getActivity()).inflate(R.layout.b_screen, parentView, false);
         runAddAnimation(animationCode, layout);
         setupNextButton(layout);

@@ -30,7 +30,8 @@ public abstract class ScreensActivity<T extends ScreensManager> extends Activity
     /**
      * Call {@link android.app.Activity#setContentView(int)} (or overloaded methods) here
      * instead of calling it in {@link android.app.Activity#onCreate(android.os.Bundle)}.
-     * This is needed to let you add screens in {@link android.app.Activity#onCreate(android.os.Bundle)}.
+     * It lets {@link com.shchurov.razuberi.core.ScreensManager} to be re-instantiated synchronously
+     * when needed.
      */
     protected abstract void setContentView();
 
