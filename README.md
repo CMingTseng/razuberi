@@ -4,8 +4,7 @@ Razuberi v0.5
 Simple, flexible and synchronous analogue of Android fragments.
 
 
-Short info
-=======
+### Short info
 
 In Razuberi the application's UI is composed of `Screen`-objects. They are managed with `ScreensManager` or its subclasses.
 
@@ -15,13 +14,12 @@ Methods `getStateAndRemove()` and `restoreAndAdd()` work with `ScreenState`-obje
 There's also `HistoryScreensManager` that supports flow of screens by keeping transitions history and using operations `replace()` and `popHistory()`. However it uses only public methods of basic `ScreensManager` so you can easily implement your own subclass of `ScreensManager` which would be the most suitable for your purposes.
 
 
-Quick start
-=======
+### Quick start
 
 At first subclass your `Activity` from `ScreensActivity<T extends ScreensManager>`, where `T` is an appropriate subclass of `ScreensManager`. Then you must implement 2 abstract methods:
 
 1. `createScreensManager()` - to instantiate an appropriate subclass of  `ScreensManager`;
-2. `setContentView()` - call `Activity`'s method `setContentView(..)` here instead of doing it in `onCreate()`, It lets ScreensManager to be re-instantiated synchronously when needed.
+2. `setContentView()` - call `Activity`'s method `setContentView(...)` here instead of doing it in `onCreate()`, it lets ScreensManager to be re-instantiated synchronously when needed.
 
 To obtain an instance of a created `ScreensManager` call `getScreensManager()`. Now you can start creating your screens. Subclass your screen from `Screen` and implement its abstract method `onAdd()`, there you must create and return your screen's `View`.
 
