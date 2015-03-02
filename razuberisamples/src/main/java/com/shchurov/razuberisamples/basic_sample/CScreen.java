@@ -16,21 +16,21 @@ public class CScreen extends Screen {
     public static final String SCREEN_TAG = "c_screen";
 
     @Override
-    protected View onAdd(ViewGroup parentView, int animationCode) {
+    protected View onAdd(ViewGroup parentView, boolean restoring) {
         View layout = LayoutInflater.from(getActivity()).inflate(R.layout.c_screen, parentView, false);
-        setupAnimations(animationCode, layout);
         setupSpinner(layout);
         return layout;
     }
 
-    private void setupAnimations(final int animationCode, final View layout) {
+    @Override
+    protected void createAddAnimation(final int animationCode) {
         if (animationCode != AnimationUtils.ANIMATION_CODE_ADDED)
             return;
-        layout.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+        getView().getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
             @Override
             public boolean onPreDraw() {
-                layout.getViewTreeObserver().removeOnPreDrawListener(this);
-                AnimationUtils.prepareAddScreenAnimation(layout, animationCode).start();
+                getView().getViewTreeObserver().removeOnPreDrawListener(this);
+                AnimationUtils.prepareAddScreenAnimation(getView(), animationCode).start();
                 return true;
             }
         });
@@ -44,20 +44,16 @@ public class CScreen extends Screen {
     }
 
     @Override
-    protected void onRemove(int animationCode) {
-        if (animationCode == AnimationUtils.ANIMATION_CODE_BACK_PRESSED) {
-            runRemoveAnimation();
-        } else {
-            super.onRemove(animationCode);
+    protected void createRemoveAnimation(int animationCode) {
+        if (animationCode != AnimationUtils.ANIMATION_CODE_BACK_PRESSED) {
+            confirmViewRemoval();
+            return;
         }
-    }
-
-    private void runRemoveAnimation() {
         Animator animator = AnimationUtils.prepareRemoveScreenAnimation(getView(), AnimationUtils.ANIMATION_CODE_BACK_PRESSED);
         animator.addListener(new SimpleAnimatorListener() {
             @Override
             public void onAnimationEnd(Animator animation) {
-                confirmRemoval();
+                confirmViewRemoval();
             }
         });
         animator.start();

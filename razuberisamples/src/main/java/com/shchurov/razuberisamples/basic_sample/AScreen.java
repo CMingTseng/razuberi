@@ -15,18 +15,28 @@ public class AScreen extends Screen {
     public static final String SCREEN_TAG = "a_screen";
 
     @Override
-    protected View onAdd(ViewGroup parentView, int animationCode) {
+    protected View onAdd(ViewGroup parentView, boolean restoring) {
         View layout = LayoutInflater.from(getActivity()).inflate(R.layout.a_screen, parentView, false);
-        setupAnimations(animationCode, layout);
         setupNextButton(layout);
         return layout;
     }
 
-    private void setupAnimations(int animationCode, View layout) {
+    private void setupNextButton(View layout) {
+        View tvNext = layout.findViewById(R.id.tv_next);
+        tvNext.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((OnShowNextScreenListener) getActivity()).onShowNextScreen();
+            }
+        });
+    }
+
+    @Override
+    protected void createAddAnimation(int animationCode) {
         if (animationCode == AnimationUtils.ANIMATION_CODE_ADDED) {
-            runLaunchAnimation(layout);
+            runLaunchAnimation(getView());
         } else if (animationCode == AnimationUtils.ANIMATION_CODE_BACK_PRESSED) {
-            runAddBackwardAnimation(layout);
+            runAddBackwardAnimation(getView());
         }
     }
 
@@ -50,31 +60,17 @@ public class AScreen extends Screen {
         });
     }
 
-    private void setupNextButton(View layout) {
-        View tvNext = layout.findViewById(R.id.tv_next);
-        tvNext.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ((OnShowNextScreenListener) getActivity()).onShowNextScreen();
-            }
-        });
-    }
-
     @Override
-    protected void onRemove(int animationCode) {
-        if (animationCode == AnimationUtils.ANIMATION_CODE_REPLACED) {
-            runRemoveAnimation();
-        } else {
-            super.onRemove(animationCode);
+    protected void createRemoveAnimation(int animationCode) {
+        if (animationCode != AnimationUtils.ANIMATION_CODE_REPLACED) {
+            confirmViewRemoval();
+            return;
         }
-    }
-
-    private void runRemoveAnimation() {
         Animator animator = AnimationUtils.prepareRemoveScreenAnimation(getView(), AnimationUtils.ANIMATION_CODE_REPLACED);
         animator.addListener(new SimpleAnimatorListener() {
             @Override
             public void onAnimationEnd(Animator animation) {
-                confirmRemoval();
+                confirmViewRemoval();
             }
         });
         animator.start();

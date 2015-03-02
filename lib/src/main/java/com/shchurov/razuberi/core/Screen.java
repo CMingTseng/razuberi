@@ -11,17 +11,15 @@ import android.view.ViewGroup;
  * Screens are managed by {@link com.shchurov.razuberi.core.ScreensManager}. Every class that extends
  * Screen must not have any other constructors than no-argument constructor, it allows the system to
  * re-instantiate screens when needed.
- * <p/>
  * <h3>Lifecycle</h3>
- * <p/>
  * <ol>
- * <li> {@link #onAdd(android.view.ViewGroup, int)} called when the screen's view is going to
- * be added to a {@link com.shchurov.razuberi.core.ScreensActivity}'s view hierarchy.
- * <li> {@link #onActivityStart()} called from {@link android.app.Activity#onStart()}.
- * <li> {@link #onActivitySaveInstanceState()} called from {@link android.app.Activity#onSaveInstanceState(android.os.Bundle)}.
- * <li> {@link #onActivityStop()} called from {@link android.app.Activity#onStop()}.
- * <li> {@link #onRemove(int)} called when the screen's view is going to
- * be removed from a {@link com.shchurov.razuberi.core.ScreensActivity}'s view hierarchy.
+ * <li> {@link #onAdd(android.view.ViewGroup, boolean)} called when the screen is going to
+ * be added to a {@link com.shchurov.razuberi.core.ScreensActivity}.
+ * <li> {@link #onStart()} called after {@link #onAdd(android.view.ViewGroup, boolean)}
+ * or from {@link android.app.Activity#onStart()}
+ * <li> {@link #onStop()} called before {@link #onRemove()} or from {@link android.app.Activity#onStop()}
+ * <li> {@link #onRemove()} called when the screen is going to
+ * be removed from a {@link com.shchurov.razuberi.core.ScreensActivity}.
  * </ol>
  */
 
@@ -32,6 +30,8 @@ public abstract class Screen {
     private String tag;
     private int containerId = -1;
     private Bundle persistentData = new Bundle();
+    private boolean onStartCalled;
+    private boolean onStopCalled;
 
     View performAdd(ScreensManager screensManager, String tag, ViewGroup container, Bundle persistentData,
                     SparseArray<Parcelable> viewState, int animationCode) {
@@ -41,9 +41,12 @@ public abstract class Screen {
         if (persistentData != null) {
             this.persistentData = persistentData;
         }
-        view = onAdd(container, animationCode);
+        view = onAdd(container, viewState != null);
         if (viewState != null) {
             view.restoreHierarchyState(viewState);
+        }
+        if (animationCode != ScreensManager.ANIMATION_CODE_ACTIVITY_RE_INSTANTIATE) {
+            createAddAnimation(animationCode);
         }
         return view;
     }
@@ -51,57 +54,98 @@ public abstract class Screen {
     ScreenState getScreenState() {
         SparseArray<Parcelable> viewState = new SparseArray<>();
         view.saveHierarchyState(viewState);
+        onSaveState();
         return new ScreenState(getClass(), containerId, tag, viewState, persistentData);
     }
 
     /**
-     * Called when the screen's view is going to be added to a {@link com.shchurov.razuberi.core.ScreensActivity}'s view hierarchy.
+     * Called when the screen is going to be added to a {@link com.shchurov.razuberi.core.ScreensActivity}.
      *
-     * @param parentView    The parent view which this screen will be added to.
-     *                      It can be used to generate proper LayoutParams for the screen's view.
-     * @param animationCode The animation code that was passed to {@link com.shchurov.razuberi.core.ScreensManager#add(Screen, int, String, int)}
-     *                      or {@link com.shchurov.razuberi.core.ScreensManager#restoreStateAndAdd(ScreenState, int)}. It is used to determine
-     *                      which animation should be run when the screen is added. When the parent Activity is re-instantiated
-     *                      the animationCode is {@link com.shchurov.razuberi.core.ScreensManager#ANIMATION_CODE_ACTIVITY_RE_INSTANTIATE}.
+     * @param parentView The parent view which this screen will be added to.
+     *                   It can be used to generate proper LayoutParams for the screen's view.
+     * @param restoring False if the screen is added for the first time, true otherwise.
      * @return the screen's view.
      */
-    protected abstract View onAdd(ViewGroup parentView, int animationCode);
+    protected abstract View onAdd(ViewGroup parentView, boolean restoring);
 
     /**
-     * Called from {@link android.app.Activity#onStart()}.
+     * Called after {@link #onAdd(android.view.ViewGroup, boolean)} to let you initialize an adding animation.
+     *
+     * @param animationCode The animation code that was passed to {@link com.shchurov.razuberi.core.ScreensManager#add(Screen, int, String, int)}
+     *                      or {@link com.shchurov.razuberi.core.ScreensManager#restoreStateAndAdd(ScreenState, int)}. It is used to determine
+     *                      which animation should be run when the screen is added.
      */
-    protected void onActivityStart() {
+    protected void createAddAnimation(int animationCode) {
+    }
+
+    void performOnStart() {
+        if (onStartCalled)
+            return;
+        onStartCalled = true;
+        onStopCalled = false;
+        onStart();
     }
 
     /**
-     * Called from {@link android.app.Activity#onStop()}. It's a good place to clean
-     * anything that may cause a memory leak.
+     * Called in two cases:
+     * 1. After {@link #onAdd(android.view.ViewGroup, boolean)};
+     * 2. From {@link ScreensActivity#onStart()}.
+     * If both of the events come in a row, the method will be called only on the first one.
+     * It's a good place to start a background thread, register for an event-bus, etc.
      */
-    protected void onActivityStop() {
+    protected void onStart() {
+    }
+
+    void performOnStop() {
+        if (onStopCalled)
+            return;
+        onStopCalled = true;
+        onStartCalled = false;
+        onStop();
     }
 
     /**
-     * Called from {@link android.app.Activity#onSaveInstanceState(android.os.Bundle)}.
-     * It's a good place to save any data you want to retain across Activity instances.
+     * Called before {@link #onStop()} when the screen is going to be removed and is expected to be restored later.
+     * It's a good place to save any data that you want to retain.
      * Use {@link android.os.Bundle} from {@link #getPersistentData()} for this purpose.
      */
-    protected void onActivitySaveInstanceState() {
+    protected void onSaveState() {
     }
 
+    /**
+     * Called in two cases:
+     * 1. Before {@link #onRemove()}
+     * 2. From {@link ScreensActivity#onStop()}
+     * If both of the events come in a row, the method will be called only on the first one.
+     * It's a good place to stop an associated background thread, unregister from an event-bus, etc.
+     */
+    protected void onStop() {
+    }
+
+    void performRemove(int animationCode) {
+        onRemove();
+        createRemoveAnimation(animationCode);
+    }
 
     /**
      * Called when you remove the screen.
-     * The screen will be removed only after calling {@link #confirmRemoval()}.
-     * Default implementation of this method just calls {@link #confirmRemoval()} immediately.
-     * However if you want to run some removal animation, call {@link #confirmRemoval()} in the end of it.
+     */
+    protected void onRemove() {
+    }
+
+    /**
+     * Called after {@link #onRemove()} to let you initialize a removal animation.
+     * The screen's view will be removed only after calling {@link #confirmViewRemoval()}.
+     * Default implementation of this method just calls {@link #confirmViewRemoval()} immediately.
+     * However if you want to run some removal animation, call {@link #confirmViewRemoval()} in the end of it.
      *
      * @param animationCode The animation code that was passed to
-     * {@link com.shchurov.razuberi.core.ScreensManager#remove(Screen, int)} or
-     * {@link com.shchurov.razuberi.core.ScreensManager#getStateAndRemove(Screen, int)}. It is used to determine
-     * which animation should be run before the screen is removed.
+     *                      {@link com.shchurov.razuberi.core.ScreensManager#remove(Screen, int)} or
+     *                      {@link com.shchurov.razuberi.core.ScreensManager#getStateAndRemove(Screen, int)}. It is used to determine
+     *                      which animation should be run before the screen is removed.
      */
-    protected void onRemove(int animationCode) {
-        confirmRemoval();
+    protected void createRemoveAnimation(int animationCode) {
+        confirmViewRemoval();
     }
 
     /**
@@ -159,18 +203,18 @@ public abstract class Screen {
     }
 
     /**
-     * @return the screen's view that was created in {@link #onAdd(android.view.ViewGroup, int)}.
+     * @return the screen's view that was created in {@link #onAdd(android.view.ViewGroup, boolean)}.
      */
     protected View getView() {
         return view;
     }
 
     /**
-     * Call this method to confirm that the screen has finished its internal removal process. Usually
-     * called in the end of removal animation that is started in {@link #onRemove(int)}.
+     * Call this method to confirm that the screen's view is ready to be removed. Usually
+     * called in the end of removal animation that was started in {@link #createRemoveAnimation(int)}.
      */
-    protected void confirmRemoval() {
-        screensManager.onScreenRemovalConfirmed(this);
+    protected void confirmViewRemoval() {
+        screensManager.onScreenViewRemovalConfirmed(this);
         this.screensManager = null;
         this.containerId = 0;
         this.view = null;

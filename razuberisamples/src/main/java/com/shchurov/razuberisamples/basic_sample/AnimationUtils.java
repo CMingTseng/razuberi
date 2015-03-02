@@ -21,8 +21,8 @@ public class AnimationUtils {
         screenView.setVisibility(View.INVISIBLE);
         screenView.setScaleX(MIN_SCALE);
         screenView.setScaleY(MIN_SCALE);
-        ObjectAnimator scaleXAnimator = ObjectAnimator.ofFloat(screenView, "scaleX", MIN_SCALE, 1f);
-        ObjectAnimator scaleYAnimator = ObjectAnimator.ofFloat(screenView, "scaleY", MIN_SCALE, 1f);
+        ObjectAnimator scaleXAnimator = ObjectAnimator.ofFloat(screenView, "scaleX", screenView.getScaleX(), 1f);
+        ObjectAnimator scaleYAnimator = ObjectAnimator.ofFloat(screenView, "scaleY", screenView.getScaleY(), 1f);
         AnimatorSet scaleAnimator = new AnimatorSet();
         scaleAnimator.playTogether(scaleXAnimator, scaleYAnimator);
         scaleAnimator.setDuration(300);
@@ -32,7 +32,8 @@ public class AnimationUtils {
         if (animationCode == ANIMATION_CODE_BACK_PRESSED) {
             fromTranslationX = -fromTranslationX;
         }
-        ObjectAnimator translationAnimator = ObjectAnimator.ofFloat(screenView, "translationX", fromTranslationX, 0);
+        screenView.setTranslationX(fromTranslationX);
+        ObjectAnimator translationAnimator = ObjectAnimator.ofFloat(screenView, "translationX", screenView.getTranslationX(), 0);
         translationAnimator.setDuration(500);
         translationAnimator.setInterpolator(new DecelerateInterpolator());
         translationAnimator.setStartDelay(300);
@@ -42,14 +43,18 @@ public class AnimationUtils {
                 screenView.setVisibility(View.VISIBLE);
             }
         });
-        AnimatorSet removeAnimator = new AnimatorSet();
-        removeAnimator.play(translationAnimator).before(scaleAnimator);
-        return removeAnimator;
+        AnimatorSet addAnimator = new AnimatorSet();
+        addAnimator.play(translationAnimator).before(scaleAnimator);
+        if (screenView.getTag() != null) {
+            ((Animator) screenView.getTag()).cancel();
+        }
+        screenView.setTag(addAnimator);
+        return addAnimator;
     }
 
     public static Animator prepareRemoveScreenAnimation(View screenView, int animationCode) {
-        ObjectAnimator scaleXAnimator = ObjectAnimator.ofFloat(screenView, "scaleX", 1f, MIN_SCALE);
-        ObjectAnimator scaleYAnimator = ObjectAnimator.ofFloat(screenView, "scaleY", 1f, MIN_SCALE);
+        ObjectAnimator scaleXAnimator = ObjectAnimator.ofFloat(screenView, "scaleX", screenView.getScaleX(), MIN_SCALE);
+        ObjectAnimator scaleYAnimator = ObjectAnimator.ofFloat(screenView, "scaleY", screenView.getScaleY(), MIN_SCALE);
         AnimatorSet scaleAnimator = new AnimatorSet();
         scaleAnimator.playTogether(scaleXAnimator, scaleYAnimator);
         scaleAnimator.setDuration(300);
@@ -59,11 +64,15 @@ public class AnimationUtils {
         if (animationCode == ANIMATION_CODE_REPLACED) {
             toTranslationX = -toTranslationX;
         }
-        ObjectAnimator translationAnimator = ObjectAnimator.ofFloat(screenView, "translationX", 0, toTranslationX);
+        ObjectAnimator translationAnimator = ObjectAnimator.ofFloat(screenView, "translationX", screenView.getTranslationX(), toTranslationX);
         translationAnimator.setDuration(500);
         translationAnimator.setInterpolator(new AccelerateInterpolator());
         AnimatorSet removeAnimator = new AnimatorSet();
         removeAnimator.play(scaleAnimator).before(translationAnimator);
+        if (screenView.getTag() != null) {
+            ((Animator) screenView.getTag()).cancel();
+        }
+        screenView.setTag(removeAnimator);
         return removeAnimator;
     }
 
