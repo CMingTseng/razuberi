@@ -71,7 +71,7 @@ public class ScreensManager {
         try {
             screen = screenState.getScreenClass().newInstance();
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new RuntimeException(screenState.getScreenClass().getName() + " must have only default constructor.");
         }
         add(screen, screenState.getContainerId(), screenState.getTag(),
                 screenState.getPersistentData(), screenState.getViewState(), animationCode);
