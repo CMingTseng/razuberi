@@ -1,7 +1,7 @@
 Razuberi v0.5
 =======
 
-Simple, flexible and synchronous analogue of Android fragments.
+Simple, flexible and synchronous alternative to Android fragments.
 
 
 ### Short info
