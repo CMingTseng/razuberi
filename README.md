@@ -26,6 +26,11 @@ To obtain an instance of the created `ScreensManager` call `getScreensManager()`
 Also, take a look at [the sample](https://github.com/shchurov/razuberi/tree/master/razuberisamples/src/main/java/com/shchurov/razuberisamples/basic_sample). It shows how to work with animations.
 
 
+### Tips
+
+If you need to subclass some specific Activity (ActionBarActivity, FragmentActivity, etc.), just copy the code from ScreensActivity to your class.
+
+
 License
 --------
 
