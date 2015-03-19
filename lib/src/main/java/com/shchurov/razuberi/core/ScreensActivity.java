@@ -62,7 +62,7 @@ public abstract class ScreensActivity<T extends ScreensManager> extends Activity
 
     @Override
     public void onBackPressed() {
-        if (!getScreensManager().onBackPressed()) {
+        if (!screensManager.onBackPressed()) {
             super.onBackPressed();
         }
     }

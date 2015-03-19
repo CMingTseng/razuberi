@@ -36,7 +36,7 @@ public class ScreensManager {
         }
     }
 
-    protected void saveScreensManagerState(Bundle instanceState) {
+    public void saveScreensManagerState(Bundle instanceState) {
         ArrayList<ScreenState> addedScreenStates = new ArrayList<>();
         for (Screen screen : addedScreens.values()) {
             addedScreenStates.add(screen.getScreenState());
@@ -121,13 +121,13 @@ public class ScreensManager {
         container.removeView(screen.getView());
     }
 
-    protected void onActivityStart() {
+    public void onActivityStart() {
         for (Screen screen : addedScreens.values()) {
             screen.performOnStart();
         }
     }
 
-    protected void onActivityStop() {
+    public void onActivityStop() {
         for (Screen screen : addedScreens.values()) {
             screen.performOnStop();
         }
@@ -157,7 +157,7 @@ public class ScreensManager {
         return activity;
     }
 
-    protected boolean onBackPressed() {
+    public boolean onBackPressed() {
         for (Screen screen : addedScreens.values()) {
             if (screen.onBackPressed())
                 return true;
