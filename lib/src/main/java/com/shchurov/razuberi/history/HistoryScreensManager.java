@@ -42,7 +42,7 @@ public class HistoryScreensManager extends ScreensManager {
     }
 
     @Override
-    protected void saveScreensManagerState(Bundle instanceState) {
+    public void saveScreensManagerState(Bundle instanceState) {
         instanceState.putParcelableArrayList(SAVE_HISTORY_KEY, history);
         super.saveScreensManagerState(instanceState);
     }
@@ -108,7 +108,7 @@ public class HistoryScreensManager extends ScreensManager {
     }
 
     @Override
-    protected boolean onBackPressed() {
+    public boolean onBackPressed() {
         if (super.onBackPressed())
             return true;
         if (history.isEmpty())
