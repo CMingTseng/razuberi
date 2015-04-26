@@ -53,10 +53,16 @@ public abstract class ScreensActivity<T extends ScreensManager> extends Activity
         super.onSaveInstanceState(outState);
     }
 
+    @Override
+    protected void onDestroy() {
+        screensManager.onActivityDestroy();
+        super.onDestroy();
+    }
+
     /**
      * @return The Activity's {@link com.shchurov.razuberi.core.ScreensManager}.
      */
-    protected T getScreensManager() {
+    public T getScreensManager() {
         return screensManager;
     }
 

@@ -67,11 +67,11 @@ public class ScreensManager {
      * @return The restored and added screen.
      */
     public Screen restoreStateAndAdd(ScreenState screenState, int animationCode) {
-        Screen screen = null;
+        Screen screen;
         try {
             screen = screenState.getScreenClass().newInstance();
         } catch (Exception e) {
-            throw new RuntimeException(screenState.getScreenClass().getName() + " must have only default constructor.");
+            throw new RuntimeException(screenState.getScreenClass().getName() + " should have only default constructor.");
         }
         add(screen, screenState.getContainerId(), screenState.getTag(),
                 screenState.getPersistentData(), screenState.getViewState(), animationCode);
@@ -130,6 +130,12 @@ public class ScreensManager {
     public void onActivityStop() {
         for (Screen screen : addedScreens.values()) {
             screen.performOnStop();
+        }
+    }
+
+    public void onActivityDestroy() {
+        for (Screen screen : addedScreens.values()) {
+            screen.onRemove();
         }
     }
 

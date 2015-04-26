@@ -128,7 +128,9 @@ public abstract class Screen {
     }
 
     /**
-     * Called when you remove the screen.
+     * Called in two cases:
+     * 1. When the screen is explicitly removed
+     * 2. From {@link ScreensActivity#onDestroy()}
      */
     protected void onRemove() {
     }
