@@ -13,6 +13,9 @@ Methods `getStateAndRemove()` and `restoreAndAdd()` work with `ScreenState`-obje
 
 There's also `HistoryScreensManager` that supports flow of screens by keeping transitions history and using operations `replace()` and `popHistory()`. However it uses only public methods of basic `ScreensManager` so you can easily implement your own subclass of `ScreensManager` which would be the most suitable for your purposes.
 
+### Dependency for Gradle
+
+`compile 'com.github.shchurov:razuberi:0.5.0'`
 
 ### Quick start
 
