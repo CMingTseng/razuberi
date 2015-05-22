@@ -63,7 +63,7 @@ public abstract class Screen {
      *
      * @param parentView The parent view which this screen will be added to.
      *                   It can be used to generate proper LayoutParams for the screen's view.
-     * @param restoring False if the screen is added for the first time, true otherwise.
+     * @param restoring  False if the screen is added for the first time, true otherwise.
      * @return the screen's view.
      */
     protected abstract View onAdd(ViewGroup parentView, boolean restoring);
@@ -207,7 +207,7 @@ public abstract class Screen {
     /**
      * @return the screen's view that was created in {@link #onAdd(android.view.ViewGroup, boolean)}.
      */
-    protected View getView() {
+    public View getView() {
         return view;
     }
 

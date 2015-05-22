@@ -136,6 +136,7 @@ public class ScreensManager {
     public void onActivityDestroy() {
         for (Screen screen : addedScreens.values()) {
             screen.onRemove();
+            screen.confirmViewRemoval();
         }
     }
 
