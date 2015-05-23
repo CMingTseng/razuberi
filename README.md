@@ -15,7 +15,7 @@ There's also `HistoryScreensManager` that supports flow of screens by keeping tr
 
 ### Dependency for Gradle
 
-`compile 'com.github.shchurov:razuberi:0.5.0'`
+`compile 'com.github.shchurov:razuberi:0.5.1'`
 
 ### Quick start
 
