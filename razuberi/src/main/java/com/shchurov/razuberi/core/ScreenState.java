@@ -6,7 +6,7 @@ import android.os.Parcelable;
 import android.util.SparseArray;
 
 /**
- *  ScreenState is used to take a snapshot of some screen so it can be removed and restored later.
+ * ScreenState is used to take a snapshot of some screen so it can be removed and restored later.
  */
 public class ScreenState implements Parcelable {
 
@@ -76,7 +76,13 @@ public class ScreenState implements Parcelable {
             int containerId = in.readInt();
             String tag = in.readString();
             Bundle hackBundle = in.readBundle();
-            SparseArray<Parcelable> viewState = hackBundle.getSparseParcelableArray(BUNDLE_HACK_KEY);
+            SparseArray<Parcelable> viewState = null;
+            try {
+                // known issue with RecyclerView, seems like it's external problem
+                viewState = hackBundle.getSparseParcelableArray(BUNDLE_HACK_KEY);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             Bundle persistentData = in.readBundle();
             return new ScreenState(screenClass, containerId, tag, viewState, persistentData);
         }
