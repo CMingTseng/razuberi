@@ -75,9 +75,9 @@ public class ScreenState implements Parcelable {
             Class<? extends Screen> screenClass = (Class<? extends Screen>) in.readSerializable();
             int containerId = in.readInt();
             String tag = in.readString();
-            Bundle hackBundle = in.readBundle();
+            Bundle hackBundle = in.readBundle(screenClass.getClassLoader());
             SparseArray<Parcelable> viewState = hackBundle.getSparseParcelableArray(BUNDLE_HACK_KEY);
-            Bundle persistentData = in.readBundle();
+            Bundle persistentData = in.readBundle(screenClass.getClassLoader());
             return new ScreenState(screenClass, containerId, tag, viewState, persistentData);
         }
 
