@@ -1,3 +1,5 @@
+Warning: API will be seriously refactored and changed soon
+
 Razuberi v0.5.5
 =======
 
