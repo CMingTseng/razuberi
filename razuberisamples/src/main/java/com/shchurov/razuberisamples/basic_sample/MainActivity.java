@@ -1,7 +1,6 @@
 package com.shchurov.razuberisamples.basic_sample;
 
 import android.os.Bundle;
-import android.util.Log;
 
 import com.shchurov.razuberi.core.Screen;
 import com.shchurov.razuberi.core.ScreensActivity;
@@ -26,15 +25,7 @@ public class MainActivity extends ScreensActivity<HistoryScreensManager> impleme
 
     @Override
     protected HistoryScreensManager createScreensManager(Bundle savedInstanceState) {
-        return new HistoryScreensManager(this, savedInstanceState) {
-            @Override
-            public boolean onBackPressed() {
-                // Keep our UI in consistent state and wait until all transitions finish
-                if (isAnimationInProgress())
-                    return true;
-                return super.onBackPressed();
-            }
-        };
+        return new HistoryScreensManager(this, savedInstanceState);
     }
 
     private void setupScreens() {
@@ -48,9 +39,6 @@ public class MainActivity extends ScreensActivity<HistoryScreensManager> impleme
     @Override
     public void onShowNextScreen() {
         HistoryScreensManager screensManager = getScreensManager();
-        // Keep our UI in consistent state and wait until all transitions finish
-        if (screensManager.isAnimationInProgress())
-            return;
         ArrayList<Screen> addedScreens = screensManager.getAddedScreens();
         String currentScreenTag = addedScreens.get(addedScreens.size() - 1).getTag();
         if (currentScreenTag.equals(AScreen.SCREEN_TAG)) {

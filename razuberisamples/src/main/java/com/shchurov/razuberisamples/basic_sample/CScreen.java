@@ -30,14 +30,7 @@ public class CScreen extends Screen {
             @Override
             public boolean onPreDraw() {
                 getView().getViewTreeObserver().removeOnPreDrawListener(this);
-                Animator animator = AnimationUtils.prepareAddScreenAnimation(getView(), animationCode);
-                animator.addListener(new SimpleAnimatorListener() {
-                    @Override
-                    public void onAnimationEnd(Animator animation) {
-                        confirmViewAddition();
-                    }
-                });
-                animator.start();
+                AnimationUtils.prepareAddScreenAnimation(getView(), animationCode).start();
                 return true;
             }
         });

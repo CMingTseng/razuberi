@@ -164,20 +164,6 @@ public class ScreensManager {
         return activity;
     }
 
-    /**
-     * It's easier to perform any screen transitions when UI is in consistent state. Call this to know
-     * if there are any playing transition animations.
-     *
-     * @return true if any of the added screens hasn't finished its addition or removal animation yet.
-     */
-    public boolean isAnimationInProgress() {
-        for (Screen screen : addedScreens.values()) {
-            if (screen.isAddAnimationInProgress() || screen.isRemoveAnimationInProgress())
-                return true;
-        }
-        return false;
-    }
-
     public boolean onBackPressed() {
         for (Screen screen : addedScreens.values()) {
             if (screen.onBackPressed())

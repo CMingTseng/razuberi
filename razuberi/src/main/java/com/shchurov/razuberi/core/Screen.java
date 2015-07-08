@@ -32,8 +32,6 @@ public abstract class Screen {
     private Bundle persistentData = new Bundle();
     private boolean onStartCalled;
     private boolean onStopCalled;
-    private boolean addAnimationInProgress;
-    private boolean removeAnimationInProgress;
 
     View performAdd(ScreensManager screensManager, String tag, ViewGroup container, Bundle persistentData,
                     SparseArray<Parcelable> viewState, int animationCode) {
@@ -48,7 +46,6 @@ public abstract class Screen {
             view.restoreHierarchyState(viewState);
         }
         if (animationCode != ScreensManager.ANIMATION_CODE_ACTIVITY_RE_INSTANTIATE) {
-            addAnimationInProgress = true;
             createAddAnimation(animationCode);
         }
         return view;
@@ -73,15 +70,12 @@ public abstract class Screen {
 
     /**
      * Called after {@link #onAdd(android.view.ViewGroup, boolean)} to let you initialize an adding animation.
-     * You must call {@link #confirmViewAddition()} in the end of the animation. Default implementation of this method
-     * just calls {@link #confirmViewAddition()} immediately.
      *
      * @param animationCode The animation code that was passed to {@link com.shchurov.razuberi.core.ScreensManager#add(Screen, int, String, int)}
      *                      or {@link com.shchurov.razuberi.core.ScreensManager#restoreStateAndAdd(ScreenState, int)}. It is used to determine
      *                      which animation should be run when the screen is added.
      */
     protected void createAddAnimation(int animationCode) {
-        confirmViewAddition();
     }
 
     void performOnStart() {
@@ -130,7 +124,6 @@ public abstract class Screen {
 
     void performRemove(int animationCode) {
         onRemove();
-        removeAnimationInProgress = true;
         createRemoveAnimation(animationCode);
     }
 
@@ -219,33 +212,10 @@ public abstract class Screen {
     }
 
     /**
-     * @return true if {@link #createAddAnimation(int)} was called and {@link #confirmViewAddition()} hasn't been called yet.
-     */
-    public boolean isAddAnimationInProgress() {
-        return addAnimationInProgress;
-    }
-
-    /**
-     * @return true if {@link #createRemoveAnimation(int)} was called and {@link #confirmViewRemoval()} hasn't been called yet.
-     */
-    public boolean isRemoveAnimationInProgress() {
-        return removeAnimationInProgress;
-    }
-
-    /**
-     * Call this method to confirm that the screen's view addition animation is finished. Usually
-     * called in the end of an addition animation that was started in {@link #createAddAnimation(int)}.
-     */
-    protected void confirmViewAddition() {
-        addAnimationInProgress = false;
-    }
-
-    /**
      * Call this method to confirm that the screen's view is ready to be removed. Usually
-     * called in the end of a removal animation that was started in {@link #createRemoveAnimation(int)}.
+     * called in the end of removal animation that was started in {@link #createRemoveAnimation(int)}.
      */
     protected void confirmViewRemoval() {
-        removeAnimationInProgress = false;
         screensManager.onScreenViewRemovalConfirmed(this);
         this.screensManager = null;
         this.containerId = 0;

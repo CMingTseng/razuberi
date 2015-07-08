@@ -5,7 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
-import android.view.animation.DecelerateInterpolator;
+import android.view.animation.*;
 
 import com.shchurov.razuberi.core.Screen;
 import com.shchurov.razuberisamples.R;
@@ -46,13 +46,7 @@ public class AScreen extends Screen {
                 .alpha(1)
                 .setDuration(400)
                 .setStartDelay(200)
-                .setInterpolator(new DecelerateInterpolator())
-                .setListener(new SimpleAnimatorListener() {
-                    @Override
-                    public void onAnimationEnd(Animator animation) {
-                        confirmViewAddition();
-                    }
-                });
+                .setInterpolator(new DecelerateInterpolator());
     }
 
     private void runAddBackwardAnimation(final View layout) {
@@ -60,14 +54,7 @@ public class AScreen extends Screen {
             @Override
             public boolean onPreDraw() {
                 layout.getViewTreeObserver().removeOnPreDrawListener(this);
-                Animator animator = AnimationUtils.prepareAddScreenAnimation(layout, AnimationUtils.ANIMATION_CODE_BACK_PRESSED);
-                animator.addListener(new SimpleAnimatorListener() {
-                    @Override
-                    public void onAnimationEnd(Animator animation) {
-                        confirmViewAddition();
-                    }
-                });
-                animator.start();
+                AnimationUtils.prepareAddScreenAnimation(layout, AnimationUtils.ANIMATION_CODE_BACK_PRESSED).start();
                 return true;
             }
         });
