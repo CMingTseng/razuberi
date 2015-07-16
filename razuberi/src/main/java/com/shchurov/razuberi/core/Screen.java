@@ -34,7 +34,7 @@ public abstract class Screen {
     private boolean onStopCalled;
 
     View performAdd(ScreensManager screensManager, String tag, ViewGroup container, Bundle persistentData,
-                    SparseArray<Parcelable> viewState, int animationCode) {
+            SparseArray<Parcelable> viewState, int animationCode) {
         this.screensManager = screensManager;
         this.tag = tag;
         this.containerId = container.getId();
@@ -62,8 +62,8 @@ public abstract class Screen {
      * Called when the screen is going to be added to a {@link com.shchurov.razuberi.core.ScreensActivity}.
      *
      * @param parentView The parent view which this screen will be added to.
-     *                   It can be used to generate proper LayoutParams for the screen's view.
-     * @param restoring  False if the screen is added for the first time, true otherwise.
+     * It can be used to generate proper LayoutParams for the screen's view.
+     * @param restoring False if the screen is added for the first time, true otherwise.
      * @return the screen's view.
      */
     protected abstract View onAdd(ViewGroup parentView, boolean restoring);
@@ -72,8 +72,8 @@ public abstract class Screen {
      * Called after {@link #onAdd(android.view.ViewGroup, boolean)} to let you initialize an adding animation.
      *
      * @param animationCode The animation code that was passed to {@link com.shchurov.razuberi.core.ScreensManager#add(Screen, int, String, int)}
-     *                      or {@link com.shchurov.razuberi.core.ScreensManager#restoreStateAndAdd(ScreenState, int)}. It is used to determine
-     *                      which animation should be run when the screen is added.
+     * or {@link com.shchurov.razuberi.core.ScreensManager#restoreStateAndAdd(ScreenState, int)}. It is used to determine
+     * which animation should be run when the screen is added.
      */
     protected void createAddAnimation(int animationCode) {
     }
@@ -142,9 +142,9 @@ public abstract class Screen {
      * However if you want to run some removal animation, call {@link #confirmViewRemoval()} in the end of it.
      *
      * @param animationCode The animation code that was passed to
-     *                      {@link com.shchurov.razuberi.core.ScreensManager#remove(Screen, int)} or
-     *                      {@link com.shchurov.razuberi.core.ScreensManager#getStateAndRemove(Screen, int)}. It is used to determine
-     *                      which animation should be run before the screen is removed.
+     * {@link com.shchurov.razuberi.core.ScreensManager#remove(Screen, int)} or
+     * {@link com.shchurov.razuberi.core.ScreensManager#getStateAndRemove(Screen, int)}. It is used to determine
+     * which animation should be run before the screen is removed.
      */
     protected void createRemoveAnimation(int animationCode) {
         confirmViewRemoval();
@@ -220,6 +220,10 @@ public abstract class Screen {
         this.screensManager = null;
         this.containerId = 0;
         this.view = null;
+    }
+
+    protected String getString(int resId) {
+        return getActivity().getString(resId);
     }
 
 }

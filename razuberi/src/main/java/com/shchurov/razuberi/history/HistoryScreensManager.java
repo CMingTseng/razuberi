@@ -48,7 +48,7 @@ public class HistoryScreensManager extends ScreensManager {
     }
 
     /**
-     * @return the history.
+     * @return the history. The list may be modified.
      */
     public ArrayList<HistoryEntry> getHistory() {
         return history;
@@ -57,14 +57,14 @@ public class HistoryScreensManager extends ScreensManager {
     /**
      * Replaces all added screens in the container view with the specified one.
      *
-     * @param screenToBeAdded     The screen to be added.
-     * @param containerId         Id of the container.
-     * @param toBeAddedTag        Tag of the screen to be added. It can be used to get the reference to the screen
-     *                            by calling {@link #getScreenByTag(String)}.
-     * @param addAnimationCode    The animation code to be passed to {@link Screen#createAddAnimation(int)}.
-     *                            It is used to specify which animation should be run when the screen is added.
+     * @param screenToBeAdded The screen to be added.
+     * @param containerId Id of the container.
+     * @param toBeAddedTag Tag of the screen to be added. It can be used to get the reference to the screen
+     * by calling {@link #getScreenByTag(String)}.
+     * @param addAnimationCode The animation code to be passed to {@link Screen#createAddAnimation(int)}.
+     * It is used to specify which animation should be run when the screen is added.
      * @param removeAnimationCode The animation code to be passed to {@link Screen#createRemoveAnimation(int)}.
-     *                            It is used to specify which animation should be run before the screen is removed.
+     * It is used to specify which animation should be run before the screen is removed.
      */
     public void replace(Screen screenToBeAdded, int containerId, String toBeAddedTag, int addAnimationCode, int removeAnimationCode) {
         LinkedList<ScreenState> addedScreenStates = new LinkedList<>();
@@ -84,13 +84,13 @@ public class HistoryScreensManager extends ScreensManager {
     /**
      * Opposite to {@link #replace(com.shchurov.razuberi.core.Screen, int, String, int, int)}.
      *
-     * @param addAnimationCode    The animation code to be passed to {@link Screen#createAddAnimation(int)}.
-     *                            It is used to specify which animation should be run when the screen is added.
+     * @param addAnimationCode The animation code to be passed to {@link Screen#createAddAnimation(int)}.
+     * It is used to specify which animation should be run when the screen is added.
      * @param removeAnimationCode The animation code to be passed to {@link Screen#createRemoveAnimation(int)}.
-     *                            It is used to specify which animation should be run before the screen is removed.
+     * It is used to specify which animation should be run before the screen is removed.
      */
     public void popHistory(int addAnimationCode, int removeAnimationCode) {
-        if (history.isEmpty())
+        if (history.isEmpty() || getRemovingScreens().size() > 0)
             return;
         HistoryEntry historyEntry = history.remove(history.size() - 1);
         int containerId = historyEntry.getEntryScreenStates().get(0).getContainerId();
