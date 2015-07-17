@@ -19,12 +19,21 @@ public class ScreenState implements Parcelable {
     private Bundle persistentData;
 
     ScreenState(Class<? extends Screen> screenClass, int containerId, String tag,
-                SparseArray<Parcelable> viewState, Bundle persistentData) {
+            SparseArray<Parcelable> viewState, Bundle persistentData) {
         this.screenClass = screenClass;
         this.containerId = containerId;
         this.tag = tag;
         this.viewState = viewState;
         this.persistentData = persistentData;
+    }
+
+    /**
+     * Creates ScreenState of a never existed screen. Later it can be used in
+     * {@link ScreensManager#restoreStateAndAdd(ScreenState, int)}.
+     */
+    public static ScreenState synthesizeScreenState(Class<? extends Screen> screenClass,
+            int containerId, String screenTag, Bundle persistentData) {
+        return new ScreenState(screenClass, containerId, screenTag, null, persistentData);
     }
 
     /**
