@@ -1,6 +1,6 @@
 Warning: API will be seriously refactored and changed soon
 
-Razuberi v0.5.5
+Razuberi v0.5.6
 =======
 
 Simple, flexible and synchronous alternative to Android fragments.
@@ -17,7 +17,7 @@ There's also `HistoryScreensManager` that supports flow of screens by keeping tr
 
 ### Dependency for Gradle
 
-`compile 'com.github.shchurov:razuberi:0.5.5'`
+`compile 'com.github.shchurov:razuberi:0.5.6'`
 
 ### Quick start
 
