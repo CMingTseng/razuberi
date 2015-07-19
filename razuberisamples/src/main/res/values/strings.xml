@@ -1,12 +1,13 @@
 <resources>
     <string name="app_name">Razuberi Sample</string>
     <string name="screen_a">Screen A</string>
-    <string name="any_text_here">Any text here</string>
     <string name="screen_b">Screen B</string>
-    <string name="random_number">Random number: %1$d</string>
     <string name="screen_c">Screen C</string>
-    <string name="option_1">Option 1</string>
-    <string name="option_2">Option 2</string>
-    <string name="option_3">Option 3</string>
+    <string name="dummy_text">
+       Direct mailing metrics ownership churn rate venture angel investor buzz crowdfunding long
+        tail. Creative A/B testing non-disclosure agreement launch party angel investor channels
+        burn rate business model canvas. Stealth rockstar seed round learning curve venture business
+        model canvas termsheet burn rate.
+    </string>
     <string name="next">Next</string>
 </resources>
