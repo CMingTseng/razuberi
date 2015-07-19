@@ -91,6 +91,12 @@ public class ScreensManager {
 
     private void add(Screen screen, int containerId, String screenTag, Bundle persistentData,
             SparseArray<Parcelable> viewState, int animationCode) {
+        if (screenTag == null) {
+            throw new IllegalArgumentException("Tag can't be null.");
+        }
+        if (addedScreens.get(screenTag) != null) {
+            throw new IllegalStateException("A screen with this tag is already added.");
+        }
         addedScreens.put(screenTag, screen);
         ViewGroup container = (ViewGroup) activity.findViewById(containerId);
         View screenView = screen.performAdd(this, screenTag, container, persistentData, viewState, animationCode);
@@ -107,6 +113,9 @@ public class ScreensManager {
      * It is used to specify which animation should be run before the screen is removed.
      */
     public void remove(Screen screen, int animationCode) {
+        if (addedScreens.get(screen.getTag()) == null) {
+            throw new IllegalStateException("The screen is not added.");
+        }
         screen.performOnStop();
         addedScreens.remove(screen.getTag());
         removingScreens.add(screen);

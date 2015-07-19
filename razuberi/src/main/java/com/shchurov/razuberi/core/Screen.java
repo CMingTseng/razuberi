@@ -191,10 +191,10 @@ public abstract class Screen {
     }
 
     /**
-     * @return true if this screen's view is added to an Activity's view hierarchy, false otherwise.
+     * @return true if this screen is added.
      */
     public boolean isAdded() {
-        return view != null;
+        return screensManager.getScreenByTag(tag) != null;
     }
 
     /**
